@@ -22,7 +22,7 @@ const Typewriter = memo(({ text, delay = 50, start = true }: TypewriterProps) =>
   }, [currentIndex, delay, text, start]);
 
   return (
-    <span className="inline-block break-words min-h-[80px] leading-snug">
+    <span className="inline-block break-words leading-snug">
       {currentText}
       <span className="animate-pulse inline-block w-[2px] h-[1em] bg-pastel-charcoal ml-1 align-middle"></span>
     </span>
