@@ -394,7 +394,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                           </h3>
                         </div>
 
-                        <p className="text-gray-600 mb-8 font-sans text-sm leading-relaxed flex-grow">
+                        <p className="text-gray-600 mb-8 font-sans text-sm leading-relaxed flex-grow break-words line-clamp-4">
                           {project.description}
                         </p>
 
