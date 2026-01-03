@@ -486,7 +486,11 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                  <Star className="fill-black text-black" />
               </div>
               
-              <div className="overflow-hidden">
+              <motion.div 
+                className="overflow-hidden"
+                animate={{ height: "auto" }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+              >
                 <AnimatePresence mode='wait'>
                   <motion.div
                     key={currentTestimonial}
@@ -527,7 +531,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                      </div>
                   </motion.div>
                 </AnimatePresence>
-              </div>
+              </motion.div>
 
               {testimonials.length > 1 && (
                 <div className="absolute bottom-4 right-4 flex gap-2 z-20">
