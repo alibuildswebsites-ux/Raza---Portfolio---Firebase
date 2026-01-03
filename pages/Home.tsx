@@ -497,7 +497,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                     transition={{ duration: 0.5, ease: "easeInOut" }}
                     className="relative z-10"
                   >
-                     <div className="flex gap-1 mb-4 md:mb-6">
+                     <div className="flex gap-1 mb-4 md:mb-6 pt-6">
                         {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
                           <Star key={i} size={20} className="fill-pastel-mint text-pastel-charcoal" />
                         ))}
