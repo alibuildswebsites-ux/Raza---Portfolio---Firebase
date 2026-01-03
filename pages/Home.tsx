@@ -17,43 +17,42 @@ import emailjs from '@emailjs/browser';
 import { useTheme } from '../context/ThemeContext';
 import { useAudio } from '../context/AudioContext';
 
-// --- ANIMATION VARIANTS ---
+// --- UNIFIED ANIMATION VARIANTS ---
 
-// 1. Simplified fadeInUp with standard easing
-const fadeInUp: Variants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { duration: 0.5, ease: "easeOut" } 
-  },
-  exit: { 
-    opacity: 0, 
-    scale: 0.95, 
-    transition: { duration: 0.2, ease: "easeIn" } 
-  }
-};
-
-// 2. Header Wrapper (Staggers the Title and the Filters)
-const headerWrapperVariants: Variants = {
-  hidden: { opacity: 1 },
+// 1. Section Parent: Controls the timing of the main blocks (Heading -> Desc -> Buttons -> Grid)
+const sectionStagger: Variants = {
+  hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
+      staggerChildren: 0.2, // Delay between each block
+      delayChildren: 0.1,
       when: "beforeChildren"
     }
   }
 };
 
-// 3. Grid Variants (Waits for header, then shows all cards at once)
-const projectGridVariants: Variants = {
-  hidden: { opacity: 1 },
+// 2. Standard Item: Used for Headings, Text, Button Rows, Forms
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { duration: 0.6, ease: "easeOut" } 
+  }
+};
+
+// 3. Grid Container: Slides up like an item, but then staggers its internal cards
+const gridStagger: Variants = {
+  hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
+    y: 0,
     transition: {
-      delayChildren: 0.4, // Wait for header/filters to finish
-      staggerChildren: 0  // Animate all cards simultaneously
+      duration: 0.6,
+      ease: "easeOut",
+      staggerChildren: 0.1, // Faster stagger for cards/stats
+      when: "beforeChildren"
     }
   }
 };
@@ -158,7 +157,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
     }
   };
 
-  const testimonialVariants = {
+  const testimonialCardVariants = {
     initial: { opacity: 0, x: 50 },
     animate: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: -50 }
@@ -235,27 +234,37 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
 
       {/* --- ABOUT ME --- */}
       <Section id="about" className="bg-pastel-surface/90 backdrop-blur-sm transition-colors duration-500">
-        <div className="flex flex-col items-center max-w-4xl mx-auto">
-          {/* Text Block - Fades in Up */}
+        <motion.div 
+          className="flex flex-col items-center max-w-4xl mx-auto"
+          variants={sectionStagger}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          {/* 1. Heading */}
+          <motion.h2 
+            variants={fadeInUp}
+            className="font-pixel text-3xl sm:text-4xl mb-6 inline-flex items-center gap-3 text-center"
+          >
+            <span className="w-3 h-8 sm:h-10 bg-pastel-peach border-2 border-pastel-charcoal"></span>
+            About Me
+          </motion.h2>
+
+          {/* 2. Description */}
           <motion.div
             variants={fadeInUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
             className="text-center mb-12"
           >
-            <h2 className="font-pixel text-3xl sm:text-4xl mb-6 inline-flex items-center gap-3">
-              <span className="w-3 h-8 sm:h-10 bg-pastel-peach border-2 border-pastel-charcoal"></span>
-              About Me
-            </h2>
             <div className="prose prose-lg text-pastel-charcoal space-y-4 font-medium text-base sm:text-lg max-w-2xl mx-auto">
               <p>Hi, nice to see you here. I'm Raza A.</p>
               <p>For the past few years, I've been helping businesses turn their outdated or underperforming websites into something that actually works for them. If you're frustrated by low conversions or worried about standing out in a crowded market, I get it. I've been there helping others bridge that gap.</p>
               <p>I'm currently pursuing my career in data science, and creating digital experiences that blend clean, intuitive design with smart development.</p>
               <p className="font-bold">Let's chat about building solutions that sets you apart.</p>
             </div>
+          </motion.div>
             
-            <div className="mt-8 flex justify-center gap-4">
+          {/* 3. Buttons (Links) */}
+          <motion.div variants={fadeInUp} className="mt-0 mb-12 flex justify-center gap-4">
               <a 
                 href="https://linkedin.com/in/alibuildswebsites" 
                 target="_blank" 
@@ -276,86 +285,81 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
               >
                 <Mail size={20} /> Email Me
               </a>
-            </div>
           </motion.div>
 
-          {/* Stats Cards - No Stagger */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
+          {/* 4. Stats Grid */}
+          <motion.div 
+            variants={gridStagger}
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full"
+          >
             {[
               { label: 'Years Exp', value: '5+', icon: <Briefcase /> },
               { label: 'Projects', value: '20+', icon: <Code /> },
               { label: 'Satisfaction', value: '100%', icon: <Star /> },
               { label: 'Availability', value: 'Project', icon: <Briefcase /> }
             ].map((stat, idx) => (
-              <div 
+              <motion.div 
                 key={idx} 
+                variants={fadeInUp} // Each card uses standard fade up
                 onMouseEnter={playHover}
                 className="bg-pastel-cream border-2 border-pastel-charcoal p-3 sm:p-6 shadow-pixel hover:translate-y-[-4px] transition-transform text-left"
               >
                 <div className="mb-2 text-pastel-blue scale-75 sm:scale-100 origin-left">{stat.icon}</div>
                 <div className="font-pixel text-2xl sm:text-3xl md:text-4xl mb-1 text-pastel-charcoal">{stat.value}</div>
                 <div className="text-[10px] sm:text-sm font-bold uppercase tracking-widest text-pastel-charcoal">{stat.label}</div>
-              </div>
+              </motion.div>
             ))}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </Section>
 
       {/* --- PROJECTS --- */}
       <Section id="projects" className="bg-pastel-surface border-t-4 border-pastel-charcoal transition-colors duration-500">
-        <div className="max-w-7xl mx-auto relative z-10 px-4 md:px-8">
-          
-          {/* GROUPED HEADER & FILTERS */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.1 }}
-            variants={headerWrapperVariants}
-            className="mb-12"
+        <motion.div 
+           className="max-w-7xl mx-auto relative z-10 px-4 md:px-8"
+           variants={sectionStagger}
+           initial="hidden"
+           whileInView="visible"
+           viewport={{ once: true, margin: "-100px" }}
+        >
+          {/* 1. Header Text */}
+          <motion.div 
+            variants={fadeInUp}
+            className="flex flex-col justify-center items-center mb-8 gap-6 text-center"
           >
-            {/* 1. Header Text */}
-            <motion.div 
-              variants={fadeInUp}
-              className="flex flex-col justify-center items-center mb-8 gap-6 text-center"
-            >
-              <div className="w-full">
-                <h2 className="font-pixel text-3xl sm:text-4xl mb-2 sm:mb-4">My Projects</h2>
-                <p className="text-base sm:text-lg max-w-2xl mx-auto">Selected works demonstrating value and functionality.</p>
-              </div>
-            </motion.div>
+            <div className="w-full">
+              <h2 className="font-pixel text-3xl sm:text-4xl mb-2 sm:mb-4">My Projects</h2>
+              <p className="text-base sm:text-lg max-w-2xl mx-auto">Selected works demonstrating value and functionality.</p>
+            </div>
+          </motion.div>
             
-            {/* 2. Filter Buttons */}
-            <motion.div 
-              variants={fadeInUp}
-              className="flex flex-wrap justify-center gap-3 w-full"
-            >
-              {categories.map((name) => (
-                <button 
-                  key={name}
-                  onClick={() => { setFilter(name); playClick(); }}
-                  onMouseEnter={playHover}
-                  className={`
-                    font-pixel text-lg px-4 py-2 border-2 border-pastel-charcoal transition-all duration-200
-                    ${filter === name 
-                      ? 'bg-pastel-blue shadow-none translate-y-1 text-black' 
-                      : 'bg-pastel-surface hover:bg-pastel-gray shadow-pixel hover:-translate-y-1 active:shadow-none active:translate-y-0 text-pastel-charcoal'
-                    }
-                  `}
-                >
-                  {name}
-                </button>
-              ))}
-            </motion.div>
+          {/* 2. Filter Buttons */}
+          <motion.div 
+            variants={fadeInUp}
+            className="flex flex-wrap justify-center gap-3 w-full mb-12"
+          >
+            {categories.map((name) => (
+              <button 
+                key={name}
+                onClick={() => { setFilter(name); playClick(); }}
+                onMouseEnter={playHover}
+                className={`
+                  font-pixel text-lg px-4 py-2 border-2 border-pastel-charcoal transition-all duration-200
+                  ${filter === name 
+                    ? 'bg-pastel-blue shadow-none translate-y-1 text-black' 
+                    : 'bg-pastel-surface hover:bg-pastel-gray shadow-pixel hover:-translate-y-1 active:shadow-none active:translate-y-0 text-pastel-charcoal'
+                  }
+                `}
+              >
+                {name}
+              </button>
+            ))}
           </motion.div>
 
           {/* 3. Project Grid */}
           {!isLoading ? (
             <motion.div 
-                // Grid Animation triggered independently or flow after header (via delayChildren)
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.1 }} 
-                variants={projectGridVariants}
+                variants={gridStagger}
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12 min-h-[200px]"
             >
                 <AnimatePresence mode="popLayout">
@@ -363,8 +367,8 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                     <motion.div
                       key={project.id}
                       layout // Layout prop kept here for filtering transitions
-                      variants={fadeInUp}
-                      exit="exit"
+                      variants={fadeInUp} // Cards staggered by gridStagger
+                      exit={{ opacity: 0, scale: 0.95 }}
                       whileHover={{ scale: 1.02, y: -5, zIndex: 10 }}
                       onMouseEnter={playHover}
                       className="group bg-pastel-surface border-2 border-pastel-charcoal shadow-pixel flex flex-col h-full hover:shadow-pixel-lg transition-shadow duration-300 relative"
@@ -436,9 +440,6 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                 {filteredProjects.length === 0 && (
                    <motion.div 
                      variants={fadeInUp}
-                     // Force visibility if list is empty
-                     initial="hidden" 
-                     animate="visible"
                      className="w-full col-span-1 md:col-span-2 lg:col-span-3 flex flex-col items-center justify-center py-20 opacity-50 bg-gray-50 border-2 border-dashed border-gray-300"
                    >
                       <div className="w-16 h-16 bg-gray-200 border-2 border-gray-400 mb-4 flex items-center justify-center">
@@ -453,7 +454,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
               <span className="font-pixel text-xl animate-pulse text-pastel-charcoal">Loading projects...</span>
             </div>
           )}
-        </div>
+        </motion.div>
       </Section>
 
       {/* --- TESTIMONIALS --- */}
@@ -461,96 +462,113 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
         <PixelCloud top="5%" size="w-24 md:w-32" duration={50} delay={0} className="opacity-50" />
         <PixelCloud top="80%" size="w-32 md:w-48" duration={60} delay={10} className="opacity-50" />
         
-        <h2 className="font-pixel text-3xl sm:text-4xl text-center mb-8 md:mb-16 relative z-10">What Clients Say</h2>
-        
-        <div className="max-w-4xl mx-auto relative z-10 px-0 sm:px-4">
-          {testimonials.length > 0 ? (
-            <div 
-               className="bg-pastel-surface border-2 border-pastel-charcoal p-6 md:p-12 shadow-pixel-lg relative mx-2 sm:mx-0 group cursor-pointer"
-               onMouseEnter={() => setIsTestimonialPaused(true)}
-               onMouseLeave={() => setIsTestimonialPaused(false)}
-            >
-              <div className="absolute -top-6 left-4 md:left-8 bg-pastel-peach border-2 border-pastel-charcoal p-2 shadow-pixel z-20">
-                 <Star className="fill-black text-black" />
-              </div>
-              
-              <motion.div 
-                className="overflow-hidden"
-                animate={{ height: "auto" }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
+        <motion.div
+           className="max-w-4xl mx-auto relative z-10 px-0 sm:px-4"
+           variants={sectionStagger}
+           initial="hidden"
+           whileInView="visible"
+           viewport={{ once: true, margin: "-100px" }}
+        >
+          {/* 1. Heading */}
+          <motion.h2 variants={fadeInUp} className="font-pixel text-3xl sm:text-4xl text-center mb-8 md:mb-16 relative z-10">
+            What Clients Say
+          </motion.h2>
+          
+          {/* 2. Testimonial Card */}
+          <motion.div variants={fadeInUp}>
+            {testimonials.length > 0 ? (
+              <div 
+                className="bg-pastel-surface border-2 border-pastel-charcoal p-6 md:p-12 shadow-pixel-lg relative mx-2 sm:mx-0 group cursor-pointer"
+                onMouseEnter={() => setIsTestimonialPaused(true)}
+                onMouseLeave={() => setIsTestimonialPaused(false)}
               >
-                <AnimatePresence mode='wait'>
-                  <motion.div
-                    key={currentTestimonial}
-                    variants={testimonialVariants}
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    transition={{ duration: 0.5, ease: "easeInOut" }}
-                    className="relative z-10"
-                  >
-                     <div className="flex gap-1 mb-4 md:mb-6 pt-6">
-                        {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
-                          <Star key={i} size={20} className="fill-pastel-mint text-pastel-charcoal" />
-                        ))}
-                     </div>
-                     <p className="font-pixel text-xl sm:text-2xl md:text-3xl leading-relaxed mb-6 md:mb-8 text-pastel-charcoal">
-                       "{testimonials[currentTestimonial].text}"
-                     </p>
-                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 border-t-2 border-pastel-gray pt-6">
-                       <div className="w-10 h-10 md:w-12 md:h-12 bg-pastel-blue rounded-full border-2 border-pastel-charcoal overflow-hidden flex-shrink-0">
-                         {/* Using generic avatar since photoUrl is removed */}
-                         <img 
-                            src={`https://api.dicebear.com/7.x/pixel-art/svg?seed=${testimonials[currentTestimonial].avatarSeed || testimonials[currentTestimonial].id}`} 
-                            alt="client" 
-                            className="w-full h-full object-cover"
-                          />
-                       </div>
-                       <div>
-                          <div className="font-pixel text-lg sm:text-xl font-bold text-pastel-charcoal">
-                              {testimonials[currentTestimonial].clientName || 'Anonymous'}
-                          </div>
-                          {testimonials[currentTestimonial].companyName && (
-                              <div className="font-sans text-sm text-pastel-charcoal/70">
-                                  {testimonials[currentTestimonial].companyName}
-                              </div>
-                          )}
-                       </div>
-                     </div>
-                  </motion.div>
-                </AnimatePresence>
-              </motion.div>
-
-              {testimonials.length > 1 && (
-                <div className="absolute bottom-4 right-4 flex gap-2 z-20">
-                  <button 
-                    onClick={() => { prevTestimonial(); playClick(); }}
-                    onMouseEnter={playHover}
-                    className="p-2 border-2 border-pastel-charcoal hover:bg-pastel-blue transition-colors bg-pastel-surface shadow-pixel-sm active:translate-y-1 text-pastel-charcoal"
-                  >
-                    <ArrowLeft size={20} />
-                  </button>
-                  <button 
-                    onClick={() => { nextTestimonial(); playClick(); }}
-                    onMouseEnter={playHover}
-                    className="p-2 border-2 border-pastel-charcoal hover:bg-pastel-blue transition-colors bg-pastel-surface shadow-pixel-sm active:translate-y-1 text-pastel-charcoal"
-                  >
-                    <ArrowRight size={20} />
-                  </button>
+                <div className="absolute -top-6 left-4 md:left-8 bg-pastel-peach border-2 border-pastel-charcoal p-2 shadow-pixel z-20">
+                  <Star className="fill-black text-black" />
                 </div>
-              )}
-            </div>
-          ) : (
-            <div className="text-center font-pixel text-xl">Testimonials coming soon!</div>
-          )}
-        </div>
+                
+                <motion.div 
+                  className="overflow-hidden"
+                  animate={{ height: "auto" }}
+                  transition={{ duration: 0.5, ease: "easeInOut" }}
+                >
+                  <AnimatePresence mode='wait'>
+                    <motion.div
+                      key={currentTestimonial}
+                      variants={testimonialCardVariants}
+                      initial="initial"
+                      animate="animate"
+                      exit="exit"
+                      transition={{ duration: 0.5, ease: "easeInOut" }}
+                      className="relative z-10"
+                    >
+                      <div className="flex gap-1 mb-4 md:mb-6 pt-6">
+                          {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
+                            <Star key={i} size={20} className="fill-pastel-mint text-pastel-charcoal" />
+                          ))}
+                      </div>
+                      <p className="font-pixel text-xl sm:text-2xl md:text-3xl leading-relaxed mb-6 md:mb-8 text-pastel-charcoal">
+                        "{testimonials[currentTestimonial].text}"
+                      </p>
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 border-t-2 border-pastel-gray pt-6">
+                        <div className="w-10 h-10 md:w-12 md:h-12 bg-pastel-blue rounded-full border-2 border-pastel-charcoal overflow-hidden flex-shrink-0">
+                          <img 
+                              src={`https://api.dicebear.com/7.x/pixel-art/svg?seed=${testimonials[currentTestimonial].avatarSeed || testimonials[currentTestimonial].id}`} 
+                              alt="client" 
+                              className="w-full h-full object-cover"
+                            />
+                        </div>
+                        <div>
+                            <div className="font-pixel text-lg sm:text-xl font-bold text-pastel-charcoal">
+                                {testimonials[currentTestimonial].clientName || 'Anonymous'}
+                            </div>
+                            {testimonials[currentTestimonial].companyName && (
+                                <div className="font-sans text-sm text-pastel-charcoal/70">
+                                    {testimonials[currentTestimonial].companyName}
+                                </div>
+                            )}
+                        </div>
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
+                </motion.div>
+
+                {testimonials.length > 1 && (
+                  <div className="absolute bottom-4 right-4 flex gap-2 z-20">
+                    <button 
+                      onClick={() => { prevTestimonial(); playClick(); }}
+                      onMouseEnter={playHover}
+                      className="p-2 border-2 border-pastel-charcoal hover:bg-pastel-blue transition-colors bg-pastel-surface shadow-pixel-sm active:translate-y-1 text-pastel-charcoal"
+                    >
+                      <ArrowLeft size={20} />
+                    </button>
+                    <button 
+                      onClick={() => { nextTestimonial(); playClick(); }}
+                      onMouseEnter={playHover}
+                      className="p-2 border-2 border-pastel-charcoal hover:bg-pastel-blue transition-colors bg-pastel-surface shadow-pixel-sm active:translate-y-1 text-pastel-charcoal"
+                    >
+                      <ArrowRight size={20} />
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="text-center font-pixel text-xl">Testimonials coming soon!</div>
+            )}
+          </motion.div>
+        </motion.div>
       </Section>
 
       {/* --- CONTACT --- */}
       <Section id="contact" className="bg-pastel-surface mb-12 md:mb-20 transition-colors duration-500">
-        <div className="max-w-3xl mx-auto flex flex-col gap-16">
-          {/* Form */}
-          <div className="w-full">
+        <motion.div 
+           className="max-w-3xl mx-auto flex flex-col gap-16"
+           variants={sectionStagger}
+           initial="hidden"
+           whileInView="visible"
+           viewport={{ once: true, margin: "-100px" }}
+        >
+          {/* 1. Header & Form */}
+          <motion.div variants={fadeInUp} className="w-full">
             <div className="text-center mb-8">
               <h2 className="font-pixel text-3xl sm:text-4xl mb-4 text-pastel-charcoal">Let's Build Something Great</h2>
               <p className="mb-0 text-base sm:text-lg text-gray-700">Have a project in mind? I'm available for freelance work. Send me the details!</p>
@@ -627,9 +645,10 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                 )}
               </div>
             </form>
-          </div>
+          </motion.div>
           
-          <div className="w-full flex flex-col items-center">
+          {/* 2. Calendly Section */}
+          <motion.div variants={fadeInUp} className="w-full flex flex-col items-center">
              <div className="text-center mb-6">
                 <h3 className="font-pixel text-2xl text-pastel-charcoal">Or Schedule a Free 30-Minute Consultation</h3>
              </div>
@@ -642,8 +661,8 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                    title="Schedule a consultation"
                  ></iframe>
              </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </Section>
 
       <Footer />
