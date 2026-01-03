@@ -10,11 +10,11 @@ import { Project, Testimonial, ContactSubmission, AdminStats } from '../types';
 // --- PROJECTS ---
 export const getProjects = async (): Promise<Project[]> => {
   const projectsRef = collection(db, 'projects');
-  // Order by 'dateCompleted'
-  const q = query(projectsRef, orderBy('dateCompleted', 'desc')); 
-  const querySnapshot = await getDocs(q);
+  // Fetch all documents. We sort client-side to handle potential missing 'updatedAt' fields safely
+  // or to transition from 'dateCompleted' which is now removed.
+  const querySnapshot = await getDocs(projectsRef);
   
-  return querySnapshot.docs.map(doc => {
+  const projects = querySnapshot.docs.map(doc => {
     const data = doc.data();
     return {
       id: doc.id,
@@ -23,32 +23,39 @@ export const getProjects = async (): Promise<Project[]> => {
       technologies: data.technologies || [],
       demoUrl: data.demoUrl,
       githubUrl: data.githubUrl,
-      thumbnailUrl: data.thumbnailUrl,
+      // thumbnailUrl removed
       category: data.category,
-      dateCompleted: data.dateCompleted,
-      isVisible: data.isVisible
+      // dateCompleted removed
+      isVisible: data.isVisible,
+      updatedAt: data.updatedAt
     } as Project;
+  });
+
+  // Sort by updatedAt descending (newest first), with fallback
+  return projects.sort((a, b) => {
+    const timeA = a.updatedAt || '';
+    const timeB = b.updatedAt || '';
+    return timeB.localeCompare(timeA);
   });
 };
 
 export const saveProject = async (project: Project): Promise<void> => {
   const projectRef = doc(db, 'projects', project.id);
   
+  // STRICT PAYLOAD: Only fields present in the admin form
   const payload = {
     title: project.title,
     description: project.description,
     technologies: project.technologies,
     demoUrl: project.demoUrl,
     githubUrl: project.githubUrl,
-    thumbnailUrl: project.thumbnailUrl,
+    // thumbnailUrl removed
     category: project.category,
-    dateCompleted: project.dateCompleted,
+    // dateCompleted removed
     isVisible: project.isVisible,
     updatedAt: new Date().toISOString()
   };
 
-  // Using setDoc with merge: true handles both creating new documents (with the provided ID)
-  // and updating existing ones without overwriting missing fields (though we provide all fields here).
   await setDoc(projectRef, payload, { merge: true });
 };
 
@@ -69,11 +76,12 @@ export const getTestimonials = async (): Promise<Testimonial[]> => {
       clientName: data.clientName,
       companyName: data.companyName,
       text: data.text,
-      photoUrl: data.photoUrl,
+      // photoUrl removed
       rating: data.rating,
       dateReceived: data.dateReceived,
       isVisible: data.isVisible,
-      isFeatured: data.isFeatured
+      isFeatured: data.isFeatured,
+      updatedAt: data.updatedAt
     } as Testimonial;
   });
 };
@@ -81,13 +89,12 @@ export const getTestimonials = async (): Promise<Testimonial[]> => {
 export const saveTestimonial = async (item: Testimonial): Promise<void> => {
   const testimonialRef = doc(db, 'testimonials', item.id);
   
-  // Use null coalescing to ensure undefined values are converted to null
-  // Firestore does not support 'undefined' as a value
+  // STRICT PAYLOAD: Only fields present in the admin form
   const payload = {
     clientName: item.clientName ?? null,
     companyName: item.companyName ?? null,
     text: item.text,
-    photoUrl: item.photoUrl ?? null,
+    // photoUrl removed
     rating: item.rating,
     dateReceived: item.dateReceived,
     isVisible: item.isVisible,
@@ -123,7 +130,6 @@ export const getMessages = async (): Promise<ContactSubmission[]> => {
 };
 
 export const saveMessage = async (msg: Omit<ContactSubmission, 'id' | 'status' | 'submittedAt'>): Promise<void> => {
-  // Use addDoc for messages to let Firestore generate the ID
   await addDoc(collection(db, 'messages'), {
     name: msg.name,
     email: msg.email,
@@ -150,11 +156,9 @@ export const getStats = async (): Promise<AdminStats> => {
     const testimonialsColl = collection(db, 'testimonials');
     const messagesColl = collection(db, 'messages');
     
-    // Firestore aggregation queries
     const pSnapshot = await getCountFromServer(projectsColl);
     const tSnapshot = await getCountFromServer(testimonialsColl);
     
-    // For unread messages, we need a query first
     const unreadQuery = query(messagesColl, where("status", "==", "unread"));
     const mSnapshot = await getCountFromServer(unreadQuery);
 

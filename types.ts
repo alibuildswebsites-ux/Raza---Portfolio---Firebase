@@ -1,3 +1,4 @@
+
 export interface Project {
   id: string;
   title: string;
@@ -5,10 +6,9 @@ export interface Project {
   technologies: string[];
   demoUrl: string;
   githubUrl?: string;
-  thumbnailUrl: string;
   category: 'Web Development' | 'UI Design' | 'Mobile App' | 'Data Science';
-  dateCompleted: string;
   isVisible: boolean;
+  updatedAt?: string;
 }
 
 export interface Testimonial {
@@ -16,11 +16,11 @@ export interface Testimonial {
   clientName?: string;
   companyName?: string;
   text: string;
-  photoUrl?: string;
   rating: number; // 1-5
   dateReceived: string;
   isVisible: boolean;
   isFeatured: boolean;
+  updatedAt?: string;
 }
 
 export interface ContactSubmission {

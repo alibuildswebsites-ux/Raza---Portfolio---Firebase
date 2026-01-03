@@ -41,8 +41,6 @@ const Projects: React.FC = () => {
       technologies,
       isVisible: currentProject.isVisible !== false,
       category: currentProject.category || 'Web Development',
-      dateCompleted: currentProject.dateCompleted || new Date().toISOString(),
-      thumbnailUrl: currentProject.thumbnailUrl || '', 
       demoUrl: currentProject.demoUrl || '',
       githubUrl: currentProject.githubUrl || ''
     };
@@ -89,8 +87,8 @@ const Projects: React.FC = () => {
         <div className="bg-pastel-surface p-4 sm:p-8 border-2 border-pastel-charcoal shadow-pixel max-w-3xl mx-auto">
           <h3 className="font-pixel text-2xl mb-6 text-pastel-charcoal">{currentProject.id ? 'Edit Project' : 'New Project'}</h3>
           <form onSubmit={handleSave} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-               <div className="md:col-span-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+               <div>
                   <label className="block font-bold mb-1 text-pastel-charcoal text-sm">Title</label>
                   <input 
                      className="w-full border-2 border-pastel-charcoal bg-pastel-cream text-pastel-charcoal p-2 focus:border-pastel-blue outline-none text-sm sm:text-base" 
@@ -123,27 +121,6 @@ const Projects: React.FC = () => {
                  required 
                  placeholder="Brief description of the project..."
               />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-               <div>
-                  <label className="block font-bold mb-1 text-pastel-charcoal text-sm">Thumbnail URL (Image)</label>
-                  <input 
-                     className="w-full border-2 border-pastel-charcoal bg-pastel-cream text-pastel-charcoal p-2 focus:border-pastel-blue outline-none text-sm sm:text-base" 
-                     value={currentProject.thumbnailUrl || ''} 
-                     onChange={e => setCurrentProject({...currentProject, thumbnailUrl: e.target.value})}
-                     placeholder="https://example.com/image.png"
-                  />
-               </div>
-               <div>
-                   <label className="block font-bold mb-1 text-pastel-charcoal text-sm">Date Completed</label>
-                   <input 
-                      type="date"
-                      className="w-full border-2 border-pastel-charcoal bg-pastel-cream text-pastel-charcoal p-2 focus:border-pastel-blue outline-none text-sm sm:text-base"
-                      value={currentProject.dateCompleted?.split('T')[0] || ''}
-                      onChange={e => setCurrentProject({...currentProject, dateCompleted: e.target.value})}
-                   />
-                </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

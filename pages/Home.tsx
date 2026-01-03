@@ -507,9 +507,9 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                      </p>
                      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 border-t-2 border-pastel-gray pt-6">
                        <div className="w-10 h-10 md:w-12 md:h-12 bg-pastel-blue rounded-full border-2 border-pastel-charcoal overflow-hidden flex-shrink-0">
-                         {/* Using generic avatar if photoUrl is empty */}
+                         {/* Using generic avatar since photoUrl is removed */}
                          <img 
-                            src={testimonials[currentTestimonial].photoUrl || `https://api.dicebear.com/7.x/pixel-art/svg?seed=${testimonials[currentTestimonial].id}`} 
+                            src={`https://api.dicebear.com/7.x/pixel-art/svg?seed=${testimonials[currentTestimonial].id}`} 
                             alt="client" 
                             className="w-full h-full object-cover"
                           />

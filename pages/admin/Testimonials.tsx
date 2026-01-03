@@ -29,7 +29,7 @@ const Testimonials: React.FC = () => {
         clientName: currentItem.clientName || '',
         companyName: currentItem.companyName || '',
         text: currentItem.text,
-        photoUrl: currentItem.photoUrl || '', // Ensure defined even if removed from UI
+        // Removed photoUrl
         rating: Number(currentItem.rating) || 5,
         dateReceived: currentItem.dateReceived || new Date().toISOString(),
         isVisible: currentItem.isVisible !== false,
