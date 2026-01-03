@@ -513,7 +513,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                        <div className="w-10 h-10 md:w-12 md:h-12 bg-pastel-blue rounded-full border-2 border-pastel-charcoal overflow-hidden flex-shrink-0">
                          {/* Using generic avatar since photoUrl is removed */}
                          <img 
-                            src={`https://api.dicebear.com/7.x/pixel-art/svg?seed=${testimonials[currentTestimonial].id}`} 
+                            src={`https://api.dicebear.com/7.x/pixel-art/svg?seed=${testimonials[currentTestimonial].avatarSeed || testimonials[currentTestimonial].id}`} 
                             alt="client" 
                             className="w-full h-full object-cover"
                           />

@@ -20,6 +20,7 @@ export interface Testimonial {
   isVisible: boolean;
   isFeatured: boolean;
   updatedAt?: string;
+  avatarSeed?: string; // Manual avatar seed overrides ID-based generation
 }
 
 export interface ContactSubmission {

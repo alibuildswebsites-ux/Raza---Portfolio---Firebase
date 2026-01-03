@@ -80,7 +80,8 @@ export const getTestimonials = async (): Promise<Testimonial[]> => {
       // dateReceived removed
       isVisible: data.isVisible,
       isFeatured: data.isFeatured,
-      updatedAt: data.updatedAt
+      updatedAt: data.updatedAt,
+      avatarSeed: data.avatarSeed
     } as Testimonial;
   });
 
@@ -106,7 +107,8 @@ export const saveTestimonial = async (item: Testimonial): Promise<void> => {
     // dateReceived removed
     isVisible: item.isVisible,
     isFeatured: item.isFeatured,
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
+    avatarSeed: item.avatarSeed ?? null
   };
 
   await setDoc(testimonialRef, payload, { merge: true });

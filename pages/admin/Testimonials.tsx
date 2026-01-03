@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import PixelButton from '../../components/ui/PixelButton';
-import { Plus, Trash2, Edit2, EyeOff } from 'lucide-react';
+import { Plus, Trash2, Edit2, EyeOff, RefreshCw } from 'lucide-react';
 import * as db from '../../services/storage';
 import { Testimonial } from '../../types';
 
@@ -33,6 +33,7 @@ const Testimonials: React.FC = () => {
         // Removed dateReceived
         isVisible: currentItem.isVisible !== false,
         isFeatured: currentItem.isFeatured || false,
+        avatarSeed: currentItem.avatarSeed,
       };
 
       await db.saveTestimonial(newItem);
@@ -112,10 +113,45 @@ const Testimonials: React.FC = () => {
                       onChange={e => setCurrentItem({...currentItem, rating: Number(e.target.value)})}
                   />
                 </div>
-                {/* Date Input Removed */}
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 pt-2">
+            {/* Avatar Manual Selection */}
+            <div className="border-t border-pastel-gray pt-4 mt-2">
+                <label className="block font-bold mb-2 text-pastel-charcoal text-sm">Avatar Customization (Manual)</label>
+                <div className="flex flex-col sm:flex-row items-center gap-4 bg-pastel-cream p-4 border-2 border-pastel-charcoal">
+                    <div className="w-16 h-16 bg-white border-2 border-pastel-charcoal shrink-0">
+                        <img 
+                            src={`https://api.dicebear.com/7.x/pixel-art/svg?seed=${currentItem.avatarSeed || currentItem.id || 'default'}`}
+                            alt="Avatar Preview"
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
+                    <div className="flex-1 w-full">
+                        <div className="flex gap-2 mb-2">
+                            <input 
+                                className="flex-1 border-2 border-pastel-charcoal bg-white text-pastel-charcoal p-2 focus:border-pastel-blue outline-none text-sm font-mono"
+                                value={currentItem.avatarSeed || ''}
+                                onChange={e => setCurrentItem({...currentItem, avatarSeed: e.target.value})}
+                                placeholder="Enter seed (e.g. 'Felix')"
+                            />
+                            <PixelButton 
+                                type="button" 
+                                size="sm"
+                                variant="secondary"
+                                onClick={() => setCurrentItem({...currentItem, avatarSeed: Math.random().toString(36).substring(7)})}
+                                title="Randomize Avatar"
+                            >
+                                <RefreshCw size={16} />
+                            </PixelButton>
+                        </div>
+                        <p className="text-xs text-pastel-charcoal/60 leading-tight">
+                            Manually set the avatar character. Leave empty to automatically use the ID.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 pt-4">
                <label className="flex items-center gap-2 cursor-pointer select-none text-pastel-charcoal text-sm sm:text-base">
                   <input 
                      type="checkbox" 
@@ -155,16 +191,26 @@ const Testimonials: React.FC = () => {
                  <button onClick={() => setShowDeleteModal(t.id)} className="text-red-500 hover:bg-red-500/10 p-1 rounded"><Trash2 size={16}/></button>
               </div>
 
-              <div className="text-yellow-400 mb-2 flex items-center gap-2">
-                 {'★'.repeat(t.rating)}
-                 {!t.isVisible && <EyeOff size={16} className="text-pastel-charcoal/50" />}
-              </div>
-              <p className="italic mb-4 text-pastel-charcoal/80 line-clamp-4 text-sm sm:text-base">"{t.text}"</p>
-              <div className="flex items-center gap-3">
-                 <div>
-                    <div className="font-bold text-sm text-pastel-charcoal">{t.clientName || 'Anonymous'}</div>
-                    <div className="text-xs text-pastel-charcoal/60">{t.companyName}</div>
+              <div className="flex items-start gap-4 mb-4">
+                 <div className="w-12 h-12 border-2 border-pastel-charcoal rounded-full overflow-hidden shrink-0 bg-pastel-blue">
+                    <img 
+                       src={`https://api.dicebear.com/7.x/pixel-art/svg?seed=${t.avatarSeed || t.id}`} 
+                       alt="avatar" 
+                       className="w-full h-full object-cover"
+                    />
                  </div>
+                 <div className="flex-1">
+                    <div className="text-yellow-400 mb-1 flex items-center gap-2">
+                       {'★'.repeat(t.rating)}
+                       {!t.isVisible && <EyeOff size={16} className="text-pastel-charcoal/50" />}
+                    </div>
+                    <p className="italic text-pastel-charcoal/80 line-clamp-3 text-sm sm:text-base">"{t.text}"</p>
+                 </div>
+              </div>
+
+              <div className="pl-16">
+                 <div className="font-bold text-sm text-pastel-charcoal">{t.clientName || 'Anonymous'}</div>
+                 <div className="text-xs text-pastel-charcoal/60">{t.companyName}</div>
               </div>
             </div>
           ))}
