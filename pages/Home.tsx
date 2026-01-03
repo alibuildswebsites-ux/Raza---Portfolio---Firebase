@@ -210,7 +210,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
         </div>
 
         {/* === LAYER 1: MAIN CONTENT === */}
-        <div className="relative z-10 w-full px-3 md:px-6 lg:px-8 flex flex-col justify-center py-12 md:py-0 h-full flex-grow">
+        <div className="relative z-10 w-full px-3 md:px-6 lg:px-8 flex flex-col justify-end md:justify-center py-12 md:py-0 h-full flex-grow">
            <div className="flex flex-col items-start text-left z-20 max-w-5xl">
               <h1 className="font-pixel text-5xl sm:text-6xl md:text-7xl lg:text-8xl mb-6 leading-tight cursor-default drop-shadow-sm">
                 Hi, I'm <br className="hidden md:block" />
