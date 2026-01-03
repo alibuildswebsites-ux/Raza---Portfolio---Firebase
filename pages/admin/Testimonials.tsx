@@ -29,9 +29,8 @@ const Testimonials: React.FC = () => {
         clientName: currentItem.clientName || '',
         companyName: currentItem.companyName || '',
         text: currentItem.text,
-        // Removed photoUrl
         rating: Number(currentItem.rating) || 5,
-        dateReceived: currentItem.dateReceived || new Date().toISOString(),
+        // Removed dateReceived
         isVisible: currentItem.isVisible !== false,
         isFeatured: currentItem.isFeatured || false,
       };
@@ -113,15 +112,7 @@ const Testimonials: React.FC = () => {
                       onChange={e => setCurrentItem({...currentItem, rating: Number(e.target.value)})}
                   />
                 </div>
-                <div>
-                   <label className="block font-bold mb-1 text-pastel-charcoal text-sm">Date</label>
-                   <input 
-                      type="date"
-                      className="w-full border-2 border-pastel-charcoal bg-pastel-cream text-pastel-charcoal p-2 text-sm sm:text-base"
-                      value={currentItem.dateReceived?.split('T')[0] || ''}
-                      onChange={e => setCurrentItem({...currentItem, dateReceived: e.target.value})}
-                   />
-                </div>
+                {/* Date Input Removed */}
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 pt-2">

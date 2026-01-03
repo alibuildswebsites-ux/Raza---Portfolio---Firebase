@@ -17,7 +17,6 @@ export interface Testimonial {
   companyName?: string;
   text: string;
   rating: number; // 1-5
-  dateReceived: string;
   isVisible: boolean;
   isFeatured: boolean;
   updatedAt?: string;

@@ -11,7 +11,6 @@ import { Project, Testimonial, ContactSubmission, AdminStats } from '../types';
 export const getProjects = async (): Promise<Project[]> => {
   const projectsRef = collection(db, 'projects');
   // Fetch all documents. We sort client-side to handle potential missing 'updatedAt' fields safely
-  // or to transition from 'dateCompleted' which is now removed.
   const querySnapshot = await getDocs(projectsRef);
   
   const projects = querySnapshot.docs.map(doc => {
@@ -42,7 +41,7 @@ export const getProjects = async (): Promise<Project[]> => {
 export const saveProject = async (project: Project): Promise<void> => {
   const projectRef = doc(db, 'projects', project.id);
   
-  // STRICT PAYLOAD: Only fields present in the admin form
+  // STRICT PAYLOAD: Only fields present in the admin form + system fields (updatedAt)
   const payload = {
     title: project.title,
     description: project.description,
@@ -66,10 +65,10 @@ export const deleteProject = async (id: string): Promise<void> => {
 // --- TESTIMONIALS ---
 export const getTestimonials = async (): Promise<Testimonial[]> => {
   const ref = collection(db, 'testimonials');
-  const q = query(ref, orderBy('dateReceived', 'desc'));
-  const snapshot = await getDocs(q);
+  // Removed server-side orderBy dateReceived as it's no longer a field
+  const snapshot = await getDocs(ref);
 
-  return snapshot.docs.map(doc => {
+  const testimonials = snapshot.docs.map(doc => {
     const data = doc.data();
     return {
       id: doc.id,
@@ -78,25 +77,33 @@ export const getTestimonials = async (): Promise<Testimonial[]> => {
       text: data.text,
       // photoUrl removed
       rating: data.rating,
-      dateReceived: data.dateReceived,
+      // dateReceived removed
       isVisible: data.isVisible,
       isFeatured: data.isFeatured,
       updatedAt: data.updatedAt
     } as Testimonial;
+  });
+
+  // Client-side sort: prioritize Featured, then Newest (updatedAt)
+  return testimonials.sort((a, b) => {
+    if (a.isFeatured !== b.isFeatured) return a.isFeatured ? -1 : 1;
+    const timeA = a.updatedAt || a.id; // Fallback to ID (timestamp based)
+    const timeB = b.updatedAt || b.id;
+    return String(timeB).localeCompare(String(timeA));
   });
 };
 
 export const saveTestimonial = async (item: Testimonial): Promise<void> => {
   const testimonialRef = doc(db, 'testimonials', item.id);
   
-  // STRICT PAYLOAD: Only fields present in the admin form
+  // STRICT PAYLOAD: Only fields present in the admin form + system fields (updatedAt)
   const payload = {
     clientName: item.clientName ?? null,
     companyName: item.companyName ?? null,
     text: item.text,
     // photoUrl removed
     rating: item.rating,
-    dateReceived: item.dateReceived,
+    // dateReceived removed
     isVisible: item.isVisible,
     isFeatured: item.isFeatured,
     updatedAt: new Date().toISOString()
