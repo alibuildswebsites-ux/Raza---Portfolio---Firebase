@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useRef, useEffect, PropsWithChildren } from 'react';
+
+import { createContext, useContext, useState, useRef, useEffect, PropsWithChildren } from 'react';
 
 interface AudioContextType {
   muted: boolean;

@@ -1,5 +1,5 @@
 
-import React, { memo, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { motion } from 'framer-motion';
 
 const ParticleBackground = memo(() => {

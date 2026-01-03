@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect, useState, PropsWithChildren } from 'react';
+
+import { createContext, useContext, useEffect, useState, PropsWithChildren } from 'react';
 
 type Theme = 'day' | 'night';
 

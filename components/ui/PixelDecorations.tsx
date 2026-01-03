@@ -1,4 +1,5 @@
-import React, { memo, useMemo } from 'react';
+
+import { memo, useMemo } from 'react';
 import { motion } from 'framer-motion';
 
 export const PixelCloud = memo(({ size = "w-32", className = "", duration = 25, delay = 0, top = "10%" }: { size?: string, className?: string, duration?: number, delay?: number, top?: string }) => (
