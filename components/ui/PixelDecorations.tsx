@@ -55,8 +55,12 @@ export const PixelCloud = memo(({ size = "w-32", className = "", duration = 25, 
 
 export const PixelSun = memo(({ className = "" }: { className?: string }) => (
   <motion.div 
-    animate={{ rotate: 360 }}
-    transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+    initial={{ y: 20, opacity: 0, rotate: 0 }}
+    animate={{ y: 0, opacity: 0.8, rotate: 360 }}
+    transition={{ 
+      default: { duration: 1 },
+      rotate: { duration: 60, repeat: Infinity, ease: "linear" }
+    }}
     className={`w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 z-0 opacity-80 ${className}`}
   >
     <svg viewBox="0 0 24 24" className="w-full h-full pixel-antialiased">
