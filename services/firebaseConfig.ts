@@ -3,16 +3,21 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
-// Your web app's Firebase configuration
+// Safely access environment variables using optional chaining
 const firebaseConfig = {
-  apiKey: "AIzaSyD0WO4C6Jzu4Vf70AjFXdJaFaA-hVPXvHI",
-  authDomain: "raza-portfolio-e6592.firebaseapp.com",
-  projectId: "raza-portfolio-e6592",
-  storageBucket: "raza-portfolio-e6592.firebasestorage.app",
-  messagingSenderId: "134003417614",
-  appId: "1:134003417614:web:7c277d084e6b17a53d525f",
-  measurementId: "G-ZT33K08CNZ"
+  apiKey: import.meta.env?.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env?.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env?.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env?.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env?.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env?.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env?.VITE_FIREBASE_MEASUREMENT_ID
 };
+
+// Log warning if config is missing (helps debugging)
+if (!firebaseConfig.apiKey) {
+  console.warn("Firebase Configuration is missing! Check your .env file.");
+}
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

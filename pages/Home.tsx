@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import Navbar from '../components/layout/Navbar';
@@ -123,9 +124,18 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
     e.preventDefault();
     setFormStatus('submitting');
 
-    const SERVICE_ID = (import.meta as any).env.VITE_EMAILJS_SERVICE_ID || '';
-    const TEMPLATE_ID = (import.meta as any).env.VITE_EMAILJS_TEMPLATE_ID || ''; 
-    const PUBLIC_KEY = (import.meta as any).env.VITE_EMAILJS_PUBLIC_KEY || '';
+    const SERVICE_ID = import.meta.env?.VITE_EMAILJS_SERVICE_ID;
+    const TEMPLATE_ID = import.meta.env?.VITE_EMAILJS_TEMPLATE_ID;
+    const PUBLIC_KEY = import.meta.env?.VITE_EMAILJS_PUBLIC_KEY;
+
+    // Validate config presence
+    if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
+      console.error("EmailJS Configuration Error: Missing environment variables. Please check your .env file.");
+      setFormStatus('error');
+      // Reset after 5s so user can try again if they fix it (dev mode)
+      setTimeout(() => setFormStatus('idle'), 5000);
+      return;
+    }
 
     const templateParams = {
       from_name: contactForm.name,
