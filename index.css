@@ -1,0 +1,85 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* DAY THEME (Default) */
+  --color-pastel-blue: #A8DAFF;
+  --color-pastel-lavender: #C9B6E4;
+  --color-pastel-mint: #B4E4C1;
+  --color-pastel-peach: #FFB5A7;
+  --color-pastel-cream: #FFF8E7;
+  --color-pastel-gray: #E8E8E8;
+  --color-pastel-charcoal: #4A4A4A;
+  --color-pastel-dark: #2D2D2D;
+  --color-pastel-surface: #FFFFFF;
+  --shadow-color: rgba(0,0,0,0.2);
+
+  /* Footer Specific Colors (Day) */
+  --color-footer-bg: #4A4A4A;
+  --color-footer-text: #FFF8E7;
+  --color-footer-muted: #E8E8E8;
+  --color-footer-shadow: #2D2D2D;
+}
+
+.theme-night {
+  /* NIGHT THEME (Cyberpunk / Vaporwave) */
+  --color-pastel-blue: #00E5FF; /* Electric Cyan */
+  --color-pastel-lavender: #D500F9; /* Neon Purple */
+  --color-pastel-mint: #00E676; /* Neon Green */
+  --color-pastel-peach: #FF3D00; /* Neon Orange/Red */
+  
+  --color-pastel-cream: #100b21; /* Deep Void Purple */
+  --color-pastel-gray: #2a2438; /* Darker secondary background */
+  
+  --color-pastel-charcoal: #E0E0E0; /* Light text for readability */
+  --color-pastel-dark: #FFFFFF; /* White borders for high contrast */
+  --color-pastel-surface: #1e1633; /* Dark card background */
+  
+  --shadow-color: #D500F9; /* Neon Pink Glow */
+
+  /* Footer Specific Colors (Night) */
+  --color-footer-bg: #05020c; /* Deepest Void Black/Purple */
+  --color-footer-text: #E0E0E0; /* Light Gray Text */
+  --color-footer-muted: #94a3b8; /* Muted Blue-Gray */
+  --color-footer-shadow: #D500F9; /* Neon Purple Shadow for Retro Effect */
+}
+
+html {
+  overflow-y: overlay; /* Scrollbar sits ON TOP of content */
+  background-color: var(--color-pastel-cream);
+  transition: background-color 0.5s ease;
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+body {
+  background-color: var(--color-pastel-cream);
+  color: var(--color-pastel-charcoal);
+  overflow-x: hidden;
+  transition: background-color 0.5s ease, color 0.5s ease;
+  /* Standard Pixel Arrow */
+  cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAD1BMVEUAAAD///8AAAAzMzP///+a0O0wAAAAAXRSTlMAQObYZgAAAFNJREFUCNdjYMAEAyA4AMQAiM4A4hYgYgYQhwCIGUE4EIQDiJmBOGYgDqK4gYgTiIOoriBiA+KguiuI2IA4qO4KImYgDqK4gYgTiIOoriBiA+KguiuI2IA4qO4KImYgDqK4gYgTiIOoriBiA+IgCgA1+xW14g4FzAAAAABJRU5ErkJggg=='), auto;
+}
+
+a, button, [role="button"], input, select, textarea {
+  /* Pixel Hand Pointer */
+  cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAD1BMVEUAAAD///8AAAAzMzP///+a0O0wAAAAAXRSTlMAQObYZgAAAFpJREFUCNdjYMAEAyA4AMQAIJ6ZgYgTiGNgYgDiWICIGYgjgIghgIghiIOIGYgjgIghiIOIGYgjgIghiIOIGYgjgIghiIOIGYgjgIghiIOIGYgjgIghiIMoAAA+cxS18q1GzgAAAABJRU5ErkJggg=='), pointer;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+::-webkit-scrollbar {
+  display: none;
+}
+
+.pixel-antialiased {
+  image-rendering: pixelated;
+}
+
+/* Mobile Optimization for inputs */
+input, textarea, select {
+  font-size: 16px; /* Prevents zoom on iOS */
+}
