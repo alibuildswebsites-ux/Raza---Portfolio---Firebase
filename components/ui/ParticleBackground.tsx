@@ -1,47 +1,48 @@
 
-import { memo, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import React, { memo, useMemo } from 'react';
 
 const ParticleBackground = memo(() => {
-  // REDUCED COUNT: Dropped from 35 to 15 to prevent iOS WebKit memory crashes
+  // REDUCED COUNT: Kept at 15 to prevent iOS WebKit memory crashes
   const particles = useMemo(() => {
     const colors = ['bg-pastel-blue', 'bg-pastel-lavender', 'bg-pastel-mint', 'bg-pastel-peach'];
-    return Array.from({ length: 15 }).map((_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      size: Math.floor(Math.random() * 3 + 2) * 4, // Multiples of 4 for pixel grid
-      color: colors[Math.floor(Math.random() * colors.length)],
-      duration: Math.random() * 20 + 20, // Slower, calmer animation
-      delay: Math.random() * 10,
-      xDrift: (Math.random() - 0.5) * 30
-    }));
+    return Array.from({ length: 15 }).map((_, i) => {
+      const xDrift = (Math.random() - 0.5) * 30;
+      return {
+        id: i,
+        x: Math.random() * 100,
+        size: Math.floor(Math.random() * 3 + 2) * 4, // Multiples of 4 for pixel grid
+        color: colors[Math.floor(Math.random() * colors.length)],
+        duration: Math.random() * 20 + 20, // Slower, calmer animation
+        delay: Math.random() * 10,
+        xDrift,
+        rotation: xDrift > 0 ? 90 : -90
+      };
+    });
   }, []);
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
       {particles.map((p) => (
-        <motion.div
+        <div
           key={p.id}
-          initial={{ 
-            x: `${p.x}vw`, 
-            y: "110vh", 
-            opacity: 0,
-            rotate: 0 
-          }}
-          animate={{ 
-            y: "-10vh", 
-            x: `${p.x + p.xDrift}vw`,
-            opacity: [0, 0.4, 0.8, 0.4, 0],
-            rotate: p.xDrift > 0 ? 90 : -90
-          }}
-          transition={{ 
-            duration: p.duration, 
-            repeat: Infinity, 
-            ease: "linear",
-            delay: p.delay,
-          }}
-          className={`absolute ${p.color} border-2 border-pastel-charcoal/10 shadow-sm will-change-transform`}
-          style={{ width: p.size, height: p.size }}
+          className={`absolute ${p.color} border-2 border-pastel-charcoal/10 shadow-sm`}
+          style={{ 
+            width: `${p.size}px`, 
+            height: `${p.size}px`,
+            left: `${p.x}vw`,
+            // CSS Variables for keyframes
+            '--tx': `${p.xDrift}vw`,
+            '--r': `${p.rotation}deg`,
+            // Animation Props
+            animationName: 'particle-float',
+            animationDuration: `${p.duration}s`,
+            animationDelay: `${p.delay}s`,
+            animationTimingFunction: 'linear',
+            animationIterationCount: 'infinite',
+            // Hardware Acceleration
+            transform: 'translateZ(0)',
+            willChange: 'transform, opacity'
+          } as React.CSSProperties}
         />
       ))}
     </div>

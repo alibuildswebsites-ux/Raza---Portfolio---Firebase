@@ -83,3 +83,24 @@ a, button, [role="button"], input, select, textarea {
 input, textarea, select {
   font-size: 16px; /* Prevents zoom on iOS */
 }
+
+/* Performance Optimized Particle Animation */
+@keyframes particle-float {
+  0% {
+    transform: translate3d(0, 110vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  75% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translate3d(var(--tx), -10vh, 0) rotate(var(--r));
+    opacity: 0;
+  }
+}
