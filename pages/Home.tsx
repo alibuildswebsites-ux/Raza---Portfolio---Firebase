@@ -211,12 +211,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
 
         {/* === LAYER 1: MAIN CONTENT === */}
         <div className="relative z-10 w-full px-3 md:px-6 lg:px-8 flex flex-col justify-center py-12 md:py-0 h-full flex-grow">
-           <motion.div 
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              className="flex flex-col items-start text-left z-20 max-w-5xl"
-           >
+           <div className="flex flex-col items-start text-left z-20 max-w-5xl">
               <h1 className="font-pixel text-5xl sm:text-6xl md:text-7xl lg:text-8xl mb-6 leading-tight cursor-default drop-shadow-sm">
                 Hi, I'm <br className="hidden md:block" />
                 <span className="bg-pastel-blue text-black px-4 py-2 shadow-pixel inline-block transform hover:scale-105 transition-transform mt-2">Raza A.</span>
@@ -234,7 +229,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                 <PixelButton onClick={scrollToProjects} size="lg" className="w-full sm:w-auto shadow-pixel-lg">View Projects</PixelButton>
                 <PixelButton onClick={() => window.open('https://calendly.com/alibuildswebsites/30min', '_blank')} variant="secondary" size="lg" className="w-full sm:w-auto shadow-pixel-lg">Start Project</PixelButton>
               </div>
-           </motion.div>
+           </div>
         </div>
       </div>
 
@@ -284,32 +279,25 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
             </div>
           </motion.div>
 
-          {/* Stats Cards - Staggered */}
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full"
-          >
+          {/* Stats Cards - No Stagger */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
             {[
               { label: 'Years Exp', value: '5+', icon: <Briefcase /> },
               { label: 'Projects', value: '20+', icon: <Code /> },
               { label: 'Satisfaction', value: '100%', icon: <Star /> },
               { label: 'Availability', value: 'Project', icon: <Briefcase /> }
             ].map((stat, idx) => (
-              <motion.div 
+              <div 
                 key={idx} 
-                variants={fadeInUp}
                 onMouseEnter={playHover}
                 className="bg-pastel-cream border-2 border-pastel-charcoal p-3 sm:p-6 shadow-pixel hover:translate-y-[-4px] transition-transform text-left"
               >
                 <div className="mb-2 text-pastel-blue scale-75 sm:scale-100 origin-left">{stat.icon}</div>
                 <div className="font-pixel text-2xl sm:text-3xl md:text-4xl mb-1 text-pastel-charcoal">{stat.value}</div>
                 <div className="text-[10px] sm:text-sm font-bold uppercase tracking-widest text-pastel-charcoal">{stat.label}</div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </Section>
 
@@ -550,16 +538,6 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                     <ArrowRight size={20} />
                   </button>
                 </div>
-              )}
-
-              {!isTestimonialPaused && testimonials.length > 1 && (
-                 <motion.div 
-                    key={currentTestimonial} // resets on change
-                    initial={{ width: "0%" }}
-                    animate={{ width: "100%" }}
-                    transition={{ duration: 6, ease: "linear" }}
-                    className="absolute bottom-0 left-0 h-1 bg-pastel-blue/30"
-                 />
               )}
             </div>
           ) : (

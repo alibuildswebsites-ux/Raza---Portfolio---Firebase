@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Rocket, Sun, Moon, Volume2, VolumeX } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -8,7 +9,6 @@ import { useAudio } from '../../context/AudioContext';
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
-  const [scrollProgress, setScrollProgress] = useState(0);
   const { theme, toggleTheme } = useTheme();
   const { muted, toggleMute, playHover, playClick, playThemeSwitch } = useAudio();
   
@@ -22,16 +22,11 @@ const Navbar: React.FC = () => {
     { name: 'Contact', id: 'contact' },
   ];
 
-  // Handle Scroll Spy and Progress Bar (Optimized)
+  // Handle Scroll Spy (Optimized)
   useEffect(() => {
     let ticking = false;
 
     const handleScrollLogic = () => {
-      const totalScroll = document.documentElement.scrollTop;
-      const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scroll = totalScroll / windowHeight;
-      setScrollProgress(scroll);
-
       const scrollPosition = window.scrollY + 100;
       let current = '';
       
@@ -107,15 +102,6 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className={`fixed top-0 w-full z-50 bg-pastel-cream border-b-4 transition-colors duration-500 ${borderColorClass}`}>
-      {/* Reading Progress Bar */}
-      <div className="absolute bottom-0 left-0 h-1 bg-gray-200 w-full z-50">
-        <motion.div 
-          className="h-full bg-pastel-blue border-r-2 border-pastel-charcoal"
-          style={{ width: `${scrollProgress * 100}%` }}
-          initial={{ width: 0 }}
-        />
-      </div>
-
       {/* Main Container - Full Width with specific padding requested */}
       <div className="w-full px-3 md:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
