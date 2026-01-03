@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import PixelButton from '../../components/ui/PixelButton';
 import { Plus, Trash2, Edit2, EyeOff } from 'lucide-react';
@@ -21,30 +22,40 @@ const Testimonials: React.FC = () => {
     e.preventDefault();
     if (!currentItem.text) return;
 
-    // Fix: Ensure ID is generated for new items so storage service doesn't crash
-    const newItem: Testimonial = {
-      id: currentItem.id || Date.now().toString(),
-      clientName: currentItem.clientName,
-      companyName: currentItem.companyName,
-      text: currentItem.text,
-      // photoUrl removed as per request
-      rating: Number(currentItem.rating) || 5,
-      dateReceived: currentItem.dateReceived || new Date().toISOString(),
-      isVisible: currentItem.isVisible !== false,
-      isFeatured: currentItem.isFeatured || false,
-    };
+    try {
+      // Fix: Ensure ID is generated for new items so storage service doesn't crash
+      const newItem: Testimonial = {
+        id: currentItem.id || Date.now().toString(),
+        clientName: currentItem.clientName || '',
+        companyName: currentItem.companyName || '',
+        text: currentItem.text,
+        photoUrl: currentItem.photoUrl || '', // Ensure defined even if removed from UI
+        rating: Number(currentItem.rating) || 5,
+        dateReceived: currentItem.dateReceived || new Date().toISOString(),
+        isVisible: currentItem.isVisible !== false,
+        isFeatured: currentItem.isFeatured || false,
+      };
 
-    await db.saveTestimonial(newItem);
-    setIsEditing(false);
-    setCurrentItem({});
-    load();
+      await db.saveTestimonial(newItem);
+      setIsEditing(false);
+      setCurrentItem({});
+      load();
+    } catch (error) {
+      console.error("Failed to save testimonial", error);
+      alert("Failed to save testimonial. Please check console for details.");
+    }
   };
 
   const handleDelete = async () => {
     if (showDeleteModal) {
-      await db.deleteTestimonial(showDeleteModal);
-      setShowDeleteModal(null);
-      load();
+      try {
+        await db.deleteTestimonial(showDeleteModal);
+        setShowDeleteModal(null);
+        load();
+      } catch (error) {
+        console.error("Failed to delete testimonial", error);
+        alert("Failed to delete testimonial.");
+      }
     }
   };
 

@@ -1,3 +1,4 @@
+
 import { db, auth } from './firebaseConfig';
 import { 
   collection, getDocs, doc, setDoc, deleteDoc, 
@@ -80,11 +81,13 @@ export const getTestimonials = async (): Promise<Testimonial[]> => {
 export const saveTestimonial = async (item: Testimonial): Promise<void> => {
   const testimonialRef = doc(db, 'testimonials', item.id);
   
+  // Use null coalescing to ensure undefined values are converted to null
+  // Firestore does not support 'undefined' as a value
   const payload = {
-    clientName: item.clientName,
-    companyName: item.companyName,
+    clientName: item.clientName ?? null,
+    companyName: item.companyName ?? null,
     text: item.text,
-    photoUrl: item.photoUrl,
+    photoUrl: item.photoUrl ?? null,
     rating: item.rating,
     dateReceived: item.dateReceived,
     isVisible: item.isVisible,
