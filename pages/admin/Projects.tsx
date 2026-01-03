@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import PixelButton from '../../components/ui/PixelButton';
 import { Plus, Trash2, Edit2, ExternalLink } from 'lucide-react';
@@ -41,22 +42,32 @@ const Projects: React.FC = () => {
       isVisible: currentProject.isVisible !== false,
       category: currentProject.category || 'Web Development',
       dateCompleted: currentProject.dateCompleted || new Date().toISOString(),
-      thumbnailUrl: currentProject.thumbnailUrl || 'https://picsum.photos/400/300', 
-      demoUrl: currentProject.demoUrl || '#',
+      thumbnailUrl: currentProject.thumbnailUrl || '', 
+      demoUrl: currentProject.demoUrl || '',
       githubUrl: currentProject.githubUrl || ''
     };
 
-    await db.saveProject(newProject);
-    setIsEditing(false);
-    setCurrentProject({});
-    loadProjects();
+    try {
+      await db.saveProject(newProject);
+      setIsEditing(false);
+      setCurrentProject({});
+      loadProjects();
+    } catch (error) {
+      console.error("Failed to save project", error);
+      alert("Failed to save project. Please try again.");
+    }
   };
 
   const handleDelete = async () => {
     if (showDeleteModal) {
-      await db.deleteProject(showDeleteModal);
-      setShowDeleteModal(null);
-      loadProjects();
+      try {
+        await db.deleteProject(showDeleteModal);
+        setShowDeleteModal(null);
+        loadProjects();
+      } catch (error) {
+        console.error("Failed to delete project", error);
+        alert("Failed to delete project.");
+      }
     }
   };
 
@@ -69,7 +80,7 @@ const Projects: React.FC = () => {
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <h2 className="font-pixel text-2xl sm:text-3xl text-pastel-charcoal">Manage Projects</h2>
-        <PixelButton onClick={() => { setCurrentProject({ isVisible: true }); setIsEditing(true); }} className="w-full sm:w-auto">
+        <PixelButton onClick={() => { setCurrentProject({ isVisible: true, category: 'Web Development' }); setIsEditing(true); }} className="w-full sm:w-auto">
           <Plus size={18} className="inline mr-2" /> Add Project
         </PixelButton>
       </div>
@@ -86,6 +97,7 @@ const Projects: React.FC = () => {
                      value={currentProject.title || ''} 
                      onChange={e => setCurrentProject({...currentProject, title: e.target.value})} 
                      required
+                     placeholder="e.g. E-commerce Platform"
                   />
                </div>
                <div>
@@ -109,6 +121,7 @@ const Projects: React.FC = () => {
                  value={currentProject.description || ''} 
                  onChange={e => setCurrentProject({...currentProject, description: e.target.value})}
                  required 
+                 placeholder="Brief description of the project..."
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -131,6 +144,7 @@ const Projects: React.FC = () => {
                      className="w-full border-2 border-pastel-charcoal bg-pastel-cream text-pastel-charcoal p-2 focus:border-pastel-blue outline-none text-sm sm:text-base" 
                      value={getTechnologiesString(currentProject.technologies)}
                      onChange={e => setCurrentProject({...currentProject, technologies: e.target.value})}
+                     placeholder="React, TypeScript, Tailwind"
                   />
                </div>
             </div>
@@ -142,6 +156,7 @@ const Projects: React.FC = () => {
                      className="w-full border-2 border-pastel-charcoal bg-pastel-cream text-pastel-charcoal p-2 focus:border-pastel-blue outline-none text-sm sm:text-base" 
                      value={currentProject.demoUrl || ''} 
                      onChange={e => setCurrentProject({...currentProject, demoUrl: e.target.value})}
+                     placeholder="https://..."
                   />
                </div>
                <div>
@@ -150,6 +165,7 @@ const Projects: React.FC = () => {
                      className="w-full border-2 border-pastel-charcoal bg-pastel-cream text-pastel-charcoal p-2 focus:border-pastel-blue outline-none text-sm sm:text-base" 
                      value={currentProject.githubUrl || ''} 
                      onChange={e => setCurrentProject({...currentProject, githubUrl: e.target.value})}
+                     placeholder="https://github.com/..."
                   />
                </div>
             </div>
@@ -173,18 +189,22 @@ const Projects: React.FC = () => {
               </div>
               
               <div className="flex gap-2 w-full sm:w-auto justify-end shrink-0">
-                <a href={p.demoUrl} target="_blank" rel="noreferrer" className="p-2 text-pastel-charcoal/50 hover:text-pastel-charcoal transition-colors" title="View Demo">
-                   <ExternalLink size={20} />
-                </a>
+                {p.demoUrl && (
+                  <a href={p.demoUrl} target="_blank" rel="noreferrer" className="p-2 text-pastel-charcoal/50 hover:text-pastel-charcoal transition-colors" title="View Demo">
+                     <ExternalLink size={20} />
+                  </a>
+                )}
                 <button 
                   onClick={() => { setCurrentProject(p); setIsEditing(true); }}
                   className="p-2 text-blue-500 hover:bg-blue-500/10 rounded"
+                  title="Edit"
                 >
                   <Edit2 size={20} />
                 </button>
                 <button 
                   onClick={() => setShowDeleteModal(p.id)}
                   className="p-2 text-red-500 hover:bg-red-500/10 rounded"
+                  title="Delete"
                 >
                   <Trash2 size={20} />
                 </button>
