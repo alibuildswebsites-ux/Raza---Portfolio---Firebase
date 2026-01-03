@@ -571,7 +571,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
           <motion.div variants={fadeInUp} className="w-full">
             <div className="text-center mb-8">
               <h2 className="font-pixel text-3xl sm:text-4xl mb-4 text-pastel-charcoal">Let's Build Something Great</h2>
-              <p className="mb-0 text-base sm:text-lg text-gray-700">Have a project in mind? I'm available for freelance work. Send me the details!</p>
+              <p className="mb-0 text-base sm:text-lg text-pastel-charcoal">Have a project in mind? I'm available for freelance work. Send me the details!</p>
             </div>
             
             <form onSubmit={handleContactSubmit} className="space-y-4 md:space-y-6 bg-pastel-cream p-5 sm:p-8 border-2 border-pastel-charcoal shadow-pixel relative overflow-hidden">
