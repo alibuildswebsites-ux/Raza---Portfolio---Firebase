@@ -124,6 +124,28 @@ const Projects: React.FC = () => {
                  placeholder="Brief description of the project..."
               />
             </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+               <div>
+                  <label className="block font-bold mb-1 text-pastel-charcoal text-sm">Thumbnail URL (Image)</label>
+                  <input 
+                     className="w-full border-2 border-pastel-charcoal bg-pastel-cream text-pastel-charcoal p-2 focus:border-pastel-blue outline-none text-sm sm:text-base" 
+                     value={currentProject.thumbnailUrl || ''} 
+                     onChange={e => setCurrentProject({...currentProject, thumbnailUrl: e.target.value})}
+                     placeholder="https://example.com/image.png"
+                  />
+               </div>
+               <div>
+                   <label className="block font-bold mb-1 text-pastel-charcoal text-sm">Date Completed</label>
+                   <input 
+                      type="date"
+                      className="w-full border-2 border-pastel-charcoal bg-pastel-cream text-pastel-charcoal p-2 focus:border-pastel-blue outline-none text-sm sm:text-base"
+                      value={currentProject.dateCompleted?.split('T')[0] || ''}
+                      onChange={e => setCurrentProject({...currentProject, dateCompleted: e.target.value})}
+                   />
+                </div>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                <div>
                   <label className="block font-bold mb-1 text-pastel-charcoal text-sm">Category</label>

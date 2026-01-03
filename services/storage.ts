@@ -1,4 +1,3 @@
-
 import { db, auth } from './firebaseConfig';
 import { 
   collection, getDocs, doc, setDoc, deleteDoc, 
