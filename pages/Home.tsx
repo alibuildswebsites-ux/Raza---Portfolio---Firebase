@@ -239,7 +239,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
           variants={sectionStagger}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: "200px" }}
         >
           {/* 1. Heading */}
           <motion.h2 
@@ -320,7 +320,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
            variants={sectionStagger}
            initial="hidden"
            whileInView="visible"
-           viewport={{ once: true, margin: "-100px" }}
+           viewport={{ once: true, margin: "200px" }}
         >
           {/* 1. Header Text */}
           <motion.div 
@@ -467,7 +467,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
            variants={sectionStagger}
            initial="hidden"
            whileInView="visible"
-           viewport={{ once: true, margin: "-100px" }}
+           viewport={{ once: true, margin: "200px" }}
         >
           {/* 1. Heading */}
           <motion.h2 variants={fadeInUp} className="font-pixel text-3xl sm:text-4xl text-center mb-8 md:mb-16 relative z-10">
@@ -565,7 +565,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
            variants={sectionStagger}
            initial="hidden"
            whileInView="visible"
-           viewport={{ once: true, margin: "-100px" }}
+           viewport={{ once: true, margin: "200px" }}
         >
           {/* 1. Header & Form */}
           <motion.div variants={fadeInUp} className="w-full">
