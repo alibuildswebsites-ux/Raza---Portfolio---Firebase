@@ -98,7 +98,10 @@ const Navbar: React.FC = () => {
     toggleMute();
   };
 
-  const borderColorClass = theme === 'night' ? 'border-black' : 'border-pastel-charcoal';
+  // Simplified: Always use border-pastel-charcoal. 
+  // In day mode it is #4A4A4A (Dark Grey).
+  // In night mode it is #E0E0E0 (Light Grey) via CSS variables, ensuring visibility against the dark background.
+  const borderColorClass = 'border-pastel-charcoal';
 
   return (
     <nav className={`fixed top-0 w-full z-50 bg-pastel-cream border-b-4 transition-colors duration-500 ${borderColorClass}`}>
