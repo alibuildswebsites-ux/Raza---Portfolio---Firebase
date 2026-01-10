@@ -2,7 +2,7 @@
 import { getFirebaseApp } from './firebaseConfig';
 import { 
   collection, doc, setDoc, deleteDoc, 
-  query, orderBy, getCountFromServer, where, getFirestore, getDocs, addDoc
+  query, orderBy, getCountFromServer, where, getFirestore, getDocs
 } from 'firebase/firestore';
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 import { Project, Testimonial, ContactSubmission, AdminStats } from '../types';

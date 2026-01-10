@@ -2,6 +2,7 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AnimatePresence, m, LazyMotion, domAnimation } from 'framer-motion';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import ScrollToTop from './components/ui/ScrollToTop';
 import Preloader from './components/ui/Preloader';
 import { ThemeProvider } from './context/ThemeContext';
@@ -156,6 +157,7 @@ const App: React.FC = () => {
           <AudioProvider>
             <HashRouter>
               <ScrollToTop />
+              <SpeedInsights />
               <AnimatePresence>
                 {loading && <Preloader onComplete={() => setLoading(false)} />}
               </AnimatePresence>
