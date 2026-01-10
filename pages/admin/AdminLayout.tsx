@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { LayoutDashboard, FolderOpen, MessageSquare, Settings, LogOut, Star, Menu, X } from 'lucide-react';
-import * as db from '../../services/storage';
+import { logoutUser } from '../../services/admin-storage';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 const AdminLayout: React.FC = () => {
@@ -9,7 +10,7 @@ const AdminLayout: React.FC = () => {
   const navigate = useNavigate();
 
   const handleLogout = useCallback(async () => {
-    await db.logoutUser();
+    await logoutUser();
     navigate('/');
   }, [navigate]);
 
@@ -27,7 +28,6 @@ const AdminLayout: React.FC = () => {
     };
 
     // Events to track user activity
-    // Removed mousemove and scroll to conserve battery/performance
     const events = ['mousedown', 'keypress', 'touchstart', 'click'];
 
     // Attach listeners
@@ -55,7 +55,6 @@ const AdminLayout: React.FC = () => {
     { to: '/dashboard/settings', icon: <Settings size={20} />, label: 'Settings' },
   ];
 
-  // Fixed dark background for sidebar
   const sidebarBg = "bg-[#2D2D2D] text-white";
 
   return (
@@ -73,7 +72,7 @@ const AdminLayout: React.FC = () => {
           </button>
       </div>
 
-      {/* Mobile Menu Overlay - Covers entire screen below header */}
+      {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div 
           className="fixed inset-0 top-16 bg-black/60 z-30 md:hidden backdrop-blur-sm"
@@ -134,7 +133,7 @@ const AdminLayout: React.FC = () => {
         </div>
       </aside>
 
-      {/* Main Content - Added top padding for mobile to account for fixed header */}
+      {/* Main Content */}
       <main className="flex-1 w-full md:ml-0 bg-pastel-cream overflow-y-auto p-4 pt-20 sm:p-6 sm:pt-24 md:p-8 md:pt-8">
         <div className="max-w-6xl mx-auto">
            <Outlet />

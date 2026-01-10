@@ -1,6 +1,7 @@
+
 import React, { useEffect, useState } from 'react';
 import { Folder, Star, Mail, Clock, Plus, MessageSquare } from 'lucide-react';
-import * as db from '../../services/storage';
+import { getStats } from '../../services/admin-storage';
 import PixelButton from '../../components/ui/PixelButton';
 import { useNavigate } from 'react-router-dom';
 
@@ -21,7 +22,7 @@ const Dashboard: React.FC = () => {
 
   const load = async () => {
     try {
-      const data = await db.getStats();
+      const data = await getStats();
       setStats({ p: data.totalProjects, t: data.totalTestimonials, m: data.unreadMessages });
     } catch (error) {
       console.error("Failed to load stats", error);

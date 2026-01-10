@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
 import PixelButton from '../../components/ui/PixelButton';
-import { getFirebase } from '../../services/firebaseConfig';
-import { updatePassword, onAuthStateChanged } from 'firebase/auth';
+import { getFirebaseApp } from '../../services/firebaseConfig';
+import { updatePassword, onAuthStateChanged, getAuth } from 'firebase/auth';
 
 const Settings: React.FC = () => {
   const [msg, setMsg] = useState({ type: '', text: '' });
@@ -13,7 +13,7 @@ const Settings: React.FC = () => {
 
   // Load current user email on mount
   useEffect(() => {
-    const { auth } = getFirebase();
+    const auth = getAuth(getFirebaseApp());
     if (!auth) return;
     
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -38,7 +38,7 @@ const Settings: React.FC = () => {
       return;
     }
 
-    const { auth } = getFirebase();
+    const auth = getAuth(getFirebaseApp());
     if (!auth?.currentUser) {
       setMsg({ type: 'error', text: 'No user logged in.' });
       return;

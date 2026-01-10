@@ -1,5 +1,6 @@
+
 import React, { useEffect, useState } from 'react';
-import * as db from '../../services/storage';
+import * as db from '../../services/admin-storage';
 import { ContactSubmission } from '../../types';
 import { CheckCircle, Trash2 } from 'lucide-react';
 import PixelButton from '../../components/ui/PixelButton';

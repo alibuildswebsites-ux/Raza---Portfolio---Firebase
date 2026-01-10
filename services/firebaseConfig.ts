@@ -1,8 +1,5 @@
 
-// Instead of importing entire firebase
 import { initializeApp, FirebaseApp } from 'firebase/app';
-import { getAuth, Auth } from 'firebase/auth';
-import { getFirestore, Firestore } from 'firebase/firestore';
 
 // Safely access environment variables using optional chaining
 const firebaseConfig = {
@@ -16,17 +13,13 @@ const firebaseConfig = {
 };
 
 let app: FirebaseApp | undefined;
-let auth: Auth | undefined;
-let db: Firestore | undefined;
 
-export const getFirebase = () => {
+export const getFirebaseApp = () => {
   if (!app) {
     if (!firebaseConfig.apiKey) {
       console.warn("Firebase Configuration is missing! Check your .env file.");
     }
     app = initializeApp(firebaseConfig);
-    auth = getAuth(app);
-    db = getFirestore(app);
   }
-  return { app, auth, db };
+  return app;
 };

@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import PixelButton from '../../components/ui/PixelButton';
 import { Plus, Trash2, Edit2, EyeOff, RefreshCw } from 'lucide-react';
-import * as db from '../../services/storage';
+import { getTestimonials } from '../../services/storage';
+import { saveTestimonial, deleteTestimonial } from '../../services/admin-storage';
 import { Testimonial } from '../../types';
 
 const Testimonials: React.FC = () => {
@@ -12,7 +13,7 @@ const Testimonials: React.FC = () => {
   const [showDeleteModal, setShowDeleteModal] = useState<string | null>(null);
 
   const load = async () => {
-    const data = await db.getTestimonials();
+    const data = await getTestimonials();
     setItems(data);
   };
 
@@ -30,13 +31,12 @@ const Testimonials: React.FC = () => {
         companyName: currentItem.companyName || '',
         text: currentItem.text,
         rating: Number(currentItem.rating) || 5,
-        // Removed dateReceived
         isVisible: currentItem.isVisible !== false,
         isFeatured: currentItem.isFeatured || false,
         avatarSeed: currentItem.avatarSeed,
       };
 
-      await db.saveTestimonial(newItem);
+      await saveTestimonial(newItem);
       setIsEditing(false);
       setCurrentItem({});
       load();
@@ -49,7 +49,7 @@ const Testimonials: React.FC = () => {
   const handleDelete = async () => {
     if (showDeleteModal) {
       try {
-        await db.deleteTestimonial(showDeleteModal);
+        await deleteTestimonial(showDeleteModal);
         setShowDeleteModal(null);
         load();
       } catch (error) {

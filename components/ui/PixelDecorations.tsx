@@ -10,45 +10,13 @@ export const PixelCloud = memo(({ size = "w-32", className = "", duration = 25, 
     className={`absolute z-0 ${size} ${className}`}
     style={{ top, willChange: 'transform' }}
   >
-    <svg viewBox="0 0 32 20" className="w-full h-full pixel-antialiased" shapeRendering="crispEdges">
+    <svg viewBox="0 0 32 20" className="w-full h-full" style={{ imageRendering: 'pixelated' }} shapeRendering="crispEdges">
        {/* Border Layer (Bluish Pastel) */}
-       <g fill="#B0C4DE">
-         {/* Top Borders */}
-         <rect x="14" y="4" width="10" height="1" />
-         <rect x="8" y="6" width="6" height="1" />
-         <rect x="3" y="9" width="5" height="1" />
-         <rect x="24" y="8" width="5" height="1" />
-         
-         {/* Bottom Borders */}
-         <rect x="5" y="17" width="22" height="1" />
-         <rect x="3" y="16" width="2" height="1" />
-         <rect x="27" y="16" width="2" height="1" />
-         
-         {/* Left Borders */}
-         <rect x="2" y="10" width="1" height="6" />
-         <rect x="7" y="7" width="1" height="3" />
-         <rect x="13" y="5" width="1" height="2" />
-         
-         {/* Right Borders */}
-         <rect x="29" y="9" width="1" height="7" />
-         <rect x="24" y="5" width="1" height="4" />
-       </g>
-
+       <path fill="#B0C4DE" d="M14 4h10v1H14zm-6 2h6v1H8zm-5 3h5v1H3zm21-1h5v1h-5zM5 17h22v1H5zm-2-1h2v1H3zm24 0h2v1h-2zM2 10h1v6H2zm5-3h1v3H7zm6-2h1v2h-1zm16 4h1v7h-1zm-5-4h1v4h-1z" />
        {/* Main Cloud Body - White */}
-       <g fill="white">
-         <rect x="5" y="13" width="22" height="4" />
-         <rect x="3" y="10" width="7" height="6" />
-         <rect x="8" y="7" width="8" height="9" />
-         <rect x="14" y="5" width="10" height="11" />
-         <rect x="22" y="9" width="7" height="7" />
-       </g>
-       
+       <path fill="#FFF" d="M5 13h22v4H5zm-2-3h7v6H3zm5-3h8v9H8zm6-2h10v11H14zm8 4h7v7h-7z" />
        {/* Shading */}
-       <g fill="#E8E8E8">
-          <rect x="5" y="16" width="22" height="1" />
-          <rect x="22" y="10" width="1" height="5" />
-          <rect x="14" y="6" width="1" height="8" />
-       </g>
+       <path fill="#E8E8E8" d="M5 16h22v1H5zm17-6h1v5h-1zm-8-4h1v8h-1z" />
     </svg>
   </m.div>
 ));
@@ -63,16 +31,8 @@ export const PixelSun = memo(({ className = "" }: { className?: string }) => (
     }}
     className={`w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 z-0 opacity-80 ${className}`}
   >
-    <svg viewBox="0 0 24 24" className="w-full h-full pixel-antialiased">
-       <rect x="8" y="8" width="8" height="8" fill="#FFB5A7" />
-       <rect x="8" y="6" width="8" height="2" fill="#FFB5A7" />
-       <rect x="8" y="16" width="8" height="2" fill="#FFB5A7" />
-       <rect x="6" y="8" width="2" height="8" fill="#FFB5A7" />
-       <rect x="16" y="8" width="2" height="8" fill="#FFB5A7" />
-       <rect x="11" y="2" width="2" height="3" fill="#FFB5A7" />
-       <rect x="11" y="19" width="2" height="3" fill="#FFB5A7" />
-       <rect x="2" y="11" width="3" height="2" fill="#FFB5A7" />
-       <rect x="19" y="11" width="3" height="2" fill="#FFB5A7" />
+    <svg viewBox="0 0 24 24" className="w-full h-full" style={{ imageRendering: 'pixelated' }}>
+       <path fill="#FFB5A7" d="M8 8h8v8H8zm0-2h8v2H8zm0 10h8v2H8zm-2-8h2v8H6zm10 0h2v8h-2zM11 2h2v3h-2zm0 17h2v3h-2zM2 11h3v2H2zm17 0h3v2h-3z" />
     </svg>
   </m.div>
 ));
@@ -84,11 +44,9 @@ export const PixelMoon = memo(({ className = "" }: { className?: string }) => (
     transition={{ duration: 1 }}
     className={`w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 z-0 ${className}`}
   >
-    <svg viewBox="0 0 24 24" className="w-full h-full pixel-antialiased drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]">
-       <path d="M8 3 H12 V5 H15 V8 H17 V16 H15 V19 H12 V21 H8 V19 H10 V17 H11 V7 H10 V5 H8 V3 Z" fill="#F5F5F5" />
-       <rect x="13" y="10" width="2" height="2" fill="#E0E0E0" />
-       <rect x="12" y="16" width="1" height="1" fill="#E0E0E0" />
-       <rect x="14" y="6" width="1" height="1" fill="#E0E0E0" />
+    <svg viewBox="0 0 24 24" className="w-full h-full drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]" style={{ imageRendering: 'pixelated' }}>
+       <path d="M8 3h4v2h3v3h2v8h-2v3h-3v2H8v-2h2v-2h1V7h-1V5H8V3z" fill="#F5F5F5" />
+       <path fill="#E0E0E0" d="M13 10h2v2h-2zm-1 6h1v1h-1zm2-10h1v1h-1z" />
     </svg>
   </m.div>
 ));

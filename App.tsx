@@ -10,16 +10,16 @@ import { AudioProvider } from './context/AudioContext';
 // ============================================================================
 // EAGER IMPORTS (Critical Path - Loaded Immediately)
 // ============================================================================
-import Home from './pages/Home'; // Keep eager - this is what visitors see first
+import Home from './pages/Home';
 
 // ============================================================================
 // LAZY IMPORTS (Code-Splitting - Loaded on Demand)
 // ============================================================================
 
-// AUTH CHUNK - Only loaded when user navigates to /admin
+// AUTH CHUNK
 const Login = lazy(() => import('./pages/Login'));
 
-// ADMIN CHUNK - Only loaded after successful authentication
+// ADMIN CHUNK
 const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'));
 const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
 const Projects = lazy(() => import('./pages/admin/Projects'));
@@ -31,7 +31,6 @@ const Settings = lazy(() => import('./pages/admin/Settings'));
 // LOADING FALLBACK COMPONENTS
 // ============================================================================
 
-// Skeleton for Login page
 const LoginSkeleton = () => (
   <div className="min-h-screen bg-pastel-cream flex items-center justify-center p-4">
     <m.div 
@@ -50,7 +49,6 @@ const LoginSkeleton = () => (
   </div>
 );
 
-// Skeleton for Admin Dashboard
 const AdminSkeleton = () => (
   <div className="min-h-screen bg-pastel-cream flex">
     <m.div 
@@ -133,23 +131,14 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   const [isAuth, setIsAuth] = useState<boolean | null>(null);
 
   useEffect(() => {
-    // Dynamically import storage to prevent it from bundling with the main entry point
-    import('./services/storage').then(db => {
+    // IMPORT CHANGE: checkSession is now in admin-storage
+    import('./services/admin-storage').then(db => {
       db.checkSession().then(auth => setIsAuth(auth));
     });
   }, []);
 
-  // Loading state - show admin skeleton
-  if (isAuth === null) {
-    return <AdminSkeleton />;
-  }
-
-  // Not authenticated - redirect
-  if (!isAuth) {
-    return <Navigate to="/admin" replace />;
-  }
-
-  // Authenticated - render children
+  if (isAuth === null) return <AdminSkeleton />;
+  if (!isAuth) return <Navigate to="/admin" replace />;
   return <>{children}</>;
 };
 
@@ -172,10 +161,10 @@ const App: React.FC = () => {
               </AnimatePresence>
 
               <Routes>
-                {/* PUBLIC ROUTE - Eager loaded */}
+                {/* PUBLIC ROUTE */}
                 <Route path="/" element={<Home startTypewriter={!loading} />} />
 
-                {/* AUTH ROUTE - Lazy loaded with skeleton */}
+                {/* AUTH ROUTE */}
                 <Route 
                   path="/admin" 
                   element={
@@ -185,7 +174,7 @@ const App: React.FC = () => {
                   } 
                 />
 
-                {/* ADMIN ROUTES - Lazy loaded with skeleton */}
+                {/* ADMIN ROUTES */}
                 <Route 
                   path="/dashboard" 
                   element={
@@ -238,7 +227,6 @@ const App: React.FC = () => {
                   />
                 </Route>
 
-                {/* CATCH-ALL */}
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </HashRouter>

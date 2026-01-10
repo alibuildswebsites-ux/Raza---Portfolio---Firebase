@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import PixelButton from '../../components/ui/PixelButton';
 import { Plus, Trash2, Edit2, ExternalLink } from 'lucide-react';
-import * as db from '../../services/storage';
+import { getProjects } from '../../services/storage';
+import { saveProject, deleteProject } from '../../services/admin-storage';
 import { Project } from '../../types';
 
 // Define strict type for form handling
@@ -17,7 +18,7 @@ const Projects: React.FC = () => {
   const [showDeleteModal, setShowDeleteModal] = useState<string | null>(null);
 
   const loadProjects = async () => {
-    const data = await db.getProjects();
+    const data = await getProjects();
     setProjects(data);
   };
 
@@ -46,7 +47,7 @@ const Projects: React.FC = () => {
     };
 
     try {
-      await db.saveProject(newProject);
+      await saveProject(newProject);
       setIsEditing(false);
       setCurrentProject({});
       loadProjects();
@@ -59,7 +60,7 @@ const Projects: React.FC = () => {
   const handleDelete = async () => {
     if (showDeleteModal) {
       try {
-        await db.deleteProject(showDeleteModal);
+        await deleteProject(showDeleteModal);
         setShowDeleteModal(null);
         loadProjects();
       } catch (error) {
