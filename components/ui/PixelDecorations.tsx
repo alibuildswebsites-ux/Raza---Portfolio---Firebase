@@ -8,7 +8,7 @@ export const PixelCloud = memo(({ size = "w-32", className = "", duration = 25, 
     animate={{ x: "110vw" }}
     transition={{ duration, repeat: Infinity, delay, ease: "linear" }}
     className={`absolute z-0 ${size} ${className}`}
-    style={{ top }}
+    style={{ top, willChange: 'transform' }}
   >
     <svg viewBox="0 0 32 20" className="w-full h-full pixel-antialiased" shapeRendering="crispEdges">
        {/* Border Layer (Bluish Pastel) */}

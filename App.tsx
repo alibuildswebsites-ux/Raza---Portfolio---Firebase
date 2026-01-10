@@ -4,7 +4,6 @@ import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AnimatePresence, m, LazyMotion, domAnimation } from 'framer-motion';
 import ScrollToTop from './components/ui/ScrollToTop';
 import Preloader from './components/ui/Preloader';
-import * as db from './services/storage';
 import { ThemeProvider } from './context/ThemeContext';
 import { AudioProvider } from './context/AudioContext';
 
@@ -134,7 +133,10 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   const [isAuth, setIsAuth] = useState<boolean | null>(null);
 
   useEffect(() => {
-    db.checkSession().then(auth => setIsAuth(auth));
+    // Dynamically import storage to prevent it from bundling with the main entry point
+    import('./services/storage').then(db => {
+      db.checkSession().then(auth => setIsAuth(auth));
+    });
   }, []);
 
   // Loading state - show admin skeleton

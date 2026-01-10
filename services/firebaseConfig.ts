@@ -1,8 +1,8 @@
+
 // Instead of importing entire firebase
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-// Only import what you need
+import { initializeApp, FirebaseApp } from 'firebase/app';
+import { getAuth, Auth } from 'firebase/auth';
+import { getFirestore, Firestore } from 'firebase/firestore';
 
 // Safely access environment variables using optional chaining
 const firebaseConfig = {
@@ -15,16 +15,18 @@ const firebaseConfig = {
   measurementId: import.meta.env?.VITE_FIREBASE_MEASUREMENT_ID
 };
 
-// Log warning if config is missing (helps debugging)
-if (!firebaseConfig.apiKey) {
-  console.warn("Firebase Configuration is missing! Check your .env file.");
-}
+let app: FirebaseApp | undefined;
+let auth: Auth | undefined;
+let db: Firestore | undefined;
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-
-// Initialize Services
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-
-export default app;
+export const getFirebase = () => {
+  if (!app) {
+    if (!firebaseConfig.apiKey) {
+      console.warn("Firebase Configuration is missing! Check your .env file.");
+    }
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
+  }
+  return { app, auth, db };
+};

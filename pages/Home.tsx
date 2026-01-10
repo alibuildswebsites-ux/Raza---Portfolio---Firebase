@@ -11,9 +11,7 @@ import {
   Linkedin, ExternalLink, Code, 
   Briefcase, Star, Send, ArrowRight, ArrowLeft, Mail, Github
 } from 'lucide-react';
-import * as db from '../services/storage';
 import { Project, Testimonial } from '../types';
-import emailjs from '@emailjs/browser';
 import { useTheme } from '../context/ThemeContext';
 import { useAudio } from '../context/AudioContext';
 
@@ -88,6 +86,8 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
 
   useEffect(() => {
     const loadData = async () => {
+      // Dynamic Import for Storage Service
+      const db = await import('../services/storage');
       const p = await db.getProjects();
       const t = await db.getTestimonials();
       setProjects(p.filter(x => x.isVisible));
@@ -145,6 +145,10 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
     };
 
     try {
+      // Dynamic Import for EmailJS and Storage
+      const emailjs = (await import('@emailjs/browser')).default;
+      const db = await import('../services/storage');
+      
       await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY);
       await db.saveMessage(contactForm);
       setFormStatus('success');
@@ -659,6 +663,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                    height="100%"
                    frameBorder="0"
                    title="Schedule a consultation"
+                   loading="lazy"
                  ></iframe>
              </div>
           </m.div>

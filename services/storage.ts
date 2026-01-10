@@ -1,5 +1,5 @@
 
-import { db, auth } from './firebaseConfig';
+import { getFirebase } from './firebaseConfig';
 import { 
   collection, getDocs, doc, setDoc, deleteDoc, 
   addDoc, query, orderBy, getCountFromServer, where
@@ -7,9 +7,13 @@ import {
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 import { Project, Testimonial, ContactSubmission, AdminStats } from '../types';
 
+// Helper to access lazy instances
+const getDB = () => getFirebase().db;
+const getAuthInstance = () => getFirebase().auth;
+
 // --- PROJECTS ---
 export const getProjects = async (): Promise<Project[]> => {
-  const projectsRef = collection(db, 'projects');
+  const projectsRef = collection(getDB(), 'projects');
   // Fetch all documents. We sort client-side to handle potential missing 'updatedAt' fields safely
   const querySnapshot = await getDocs(projectsRef);
   
@@ -39,7 +43,7 @@ export const getProjects = async (): Promise<Project[]> => {
 };
 
 export const saveProject = async (project: Project): Promise<void> => {
-  const projectRef = doc(db, 'projects', project.id);
+  const projectRef = doc(getDB(), 'projects', project.id);
   
   // STRICT PAYLOAD: Only fields present in the admin form + system fields (updatedAt)
   const payload = {
@@ -59,12 +63,12 @@ export const saveProject = async (project: Project): Promise<void> => {
 };
 
 export const deleteProject = async (id: string): Promise<void> => {
-  await deleteDoc(doc(db, 'projects', id));
+  await deleteDoc(doc(getDB(), 'projects', id));
 };
 
 // --- TESTIMONIALS ---
 export const getTestimonials = async (): Promise<Testimonial[]> => {
-  const ref = collection(db, 'testimonials');
+  const ref = collection(getDB(), 'testimonials');
   // Removed server-side orderBy dateReceived as it's no longer a field
   const snapshot = await getDocs(ref);
 
@@ -95,7 +99,7 @@ export const getTestimonials = async (): Promise<Testimonial[]> => {
 };
 
 export const saveTestimonial = async (item: Testimonial): Promise<void> => {
-  const testimonialRef = doc(db, 'testimonials', item.id);
+  const testimonialRef = doc(getDB(), 'testimonials', item.id);
   
   // STRICT PAYLOAD: Only fields present in the admin form + system fields (updatedAt)
   const payload = {
@@ -115,12 +119,12 @@ export const saveTestimonial = async (item: Testimonial): Promise<void> => {
 };
 
 export const deleteTestimonial = async (id: string): Promise<void> => {
-  await deleteDoc(doc(db, 'testimonials', id));
+  await deleteDoc(doc(getDB(), 'testimonials', id));
 };
 
 // --- MESSAGES ---
 export const getMessages = async (): Promise<ContactSubmission[]> => {
-  const ref = collection(db, 'messages');
+  const ref = collection(getDB(), 'messages');
   const q = query(ref, orderBy('submittedAt', 'desc'));
   const snapshot = await getDocs(q);
   
@@ -139,7 +143,7 @@ export const getMessages = async (): Promise<ContactSubmission[]> => {
 };
 
 export const saveMessage = async (msg: Omit<ContactSubmission, 'id' | 'status' | 'submittedAt'>): Promise<void> => {
-  await addDoc(collection(db, 'messages'), {
+  await addDoc(collection(getDB(), 'messages'), {
     name: msg.name,
     email: msg.email,
     phone: msg.phone,
@@ -150,17 +154,18 @@ export const saveMessage = async (msg: Omit<ContactSubmission, 'id' | 'status' |
 };
 
 export const markMessageRead = async (id: string): Promise<void> => {
-  const ref = doc(db, 'messages', id);
+  const ref = doc(getDB(), 'messages', id);
   await setDoc(ref, { status: 'read' }, { merge: true });
 };
 
 export const deleteMessage = async (id: string): Promise<void> => {
-  await deleteDoc(doc(db, 'messages', id));
+  await deleteDoc(doc(getDB(), 'messages', id));
 };
 
 // --- ADMIN STATS ---
 export const getStats = async (): Promise<AdminStats> => {
   try {
+    const db = getDB();
     const projectsColl = collection(db, 'projects');
     const testimonialsColl = collection(db, 'testimonials');
     const messagesColl = collection(db, 'messages');
@@ -191,7 +196,7 @@ export const getStats = async (): Promise<AdminStats> => {
 // --- AUTH ---
 export const loginUser = async (email: string, pass: string): Promise<boolean> => {
   try {
-    await signInWithEmailAndPassword(auth, email, pass);
+    await signInWithEmailAndPassword(getAuthInstance(), email, pass);
     return true;
   } catch (error) {
     console.error("Login Error:", error);
@@ -200,12 +205,12 @@ export const loginUser = async (email: string, pass: string): Promise<boolean> =
 };
 
 export const logoutUser = async () => {
-  await signOut(auth);
+  await signOut(getAuthInstance());
 };
 
 export const checkSession = async (): Promise<boolean> => {
   return new Promise((resolve) => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(getAuthInstance(), (user) => {
       unsubscribe();
       resolve(!!user);
     });
