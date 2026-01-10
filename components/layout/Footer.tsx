@@ -91,7 +91,7 @@ const Footer: React.FC = () => {
         <div className="border-t-2 border-white/10 pt-8 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
           {/* Copyright */}
           <div className="text-center md:text-left order-2 md:order-1">
-            <p className="font-pixel text-base text-gray-400 opacity-60 tracking-wide">© 2024 Raza A. All rights reserved.</p>
+            <p className="font-pixel text-base text-gray-400 opacity-60 tracking-wide">© 2026 Raza A. All rights reserved.</p>
           </div>
           
           {/* Made With Badge (Centered) */}
