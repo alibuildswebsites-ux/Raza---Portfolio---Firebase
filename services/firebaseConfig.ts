@@ -17,7 +17,7 @@ let app: FirebaseApp | undefined;
 export const getFirebaseApp = () => {
   if (!app) {
     if (!firebaseConfig.apiKey) {
-      console.warn("Firebase Configuration is missing! Check your .env file.");
+      throw new Error("Firebase Configuration is missing! Check your .env file.");
     }
     app = initializeApp(firebaseConfig);
   }

@@ -83,6 +83,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
   // Contact Form State
   const [contactForm, setContactForm] = useState({ name: '', email: '', phone: '', message: '' });
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const loadData = async () => {
@@ -122,6 +123,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormStatus('submitting');
+    setErrorMessage('');
 
     const SERVICE_ID = import.meta.env?.VITE_EMAILJS_SERVICE_ID;
     const TEMPLATE_ID = import.meta.env?.VITE_EMAILJS_TEMPLATE_ID;
@@ -131,8 +133,12 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
     if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
       console.error("EmailJS Configuration Error: Missing environment variables. Please check your .env file.");
       setFormStatus('error');
+      setErrorMessage("Configuration error. Please contact admin.");
       // Reset after 5s so user can try again if they fix it (dev mode)
-      setTimeout(() => setFormStatus('idle'), 5000);
+      setTimeout(() => {
+        setFormStatus('idle');
+        setErrorMessage('');
+      }, 5000);
       return;
     }
 
@@ -153,11 +159,18 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
       await db.saveMessage(contactForm);
       setFormStatus('success');
       setContactForm({ name: '', email: '', phone: '', message: '' });
-      setTimeout(() => setFormStatus('idle'), 5000);
+      setTimeout(() => {
+        setFormStatus('idle');
+        setErrorMessage('');
+      }, 5000);
     } catch (err) {
       console.error('EmailJS Error:', err);
       setFormStatus('error');
-      setTimeout(() => setFormStatus('idle'), 5000);
+      setErrorMessage("Something went wrong. Please try again.");
+      setTimeout(() => {
+        setFormStatus('idle');
+        setErrorMessage('');
+      }, 5000);
     }
   };
 
@@ -583,8 +596,9 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                  <Send size={100} />
               </div>
               <div>
-                <label className="block font-pixel text-lg mb-2 text-pastel-charcoal">Your Name</label>
+                <label htmlFor="contact-name" className="block font-pixel text-lg mb-2 text-pastel-charcoal">Your Name</label>
                 <input 
+                  id="contact-name"
                   type="text" 
                   required
                   value={contactForm.name}
@@ -594,8 +608,9 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                 />
               </div>
               <div>
-                <label className="block font-pixel text-lg mb-2 text-pastel-charcoal">Email Address</label>
+                <label htmlFor="contact-email" className="block font-pixel text-lg mb-2 text-pastel-charcoal">Email Address</label>
                 <input 
+                  id="contact-email"
                   type="email" 
                   required
                   value={contactForm.email}
@@ -605,8 +620,9 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                 />
               </div>
                <div>
-                <label className="block font-pixel text-lg mb-2 text-pastel-charcoal">Phone (Optional)</label>
+                <label htmlFor="contact-phone" className="block font-pixel text-lg mb-2 text-pastel-charcoal">Phone (Optional)</label>
                 <input 
+                  id="contact-phone"
                   type="tel" 
                   value={contactForm.phone}
                   onChange={e => setContactForm({...contactForm, phone: e.target.value})}
@@ -615,8 +631,9 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                 />
               </div>
               <div>
-                <label className="block font-pixel text-lg mb-2 text-pastel-charcoal">Project Details</label>
+                <label htmlFor="contact-message" className="block font-pixel text-lg mb-2 text-pastel-charcoal">Project Details</label>
                 <textarea 
+                  id="contact-message"
                   required
                   rows={4}
                   value={contactForm.message}
@@ -640,7 +657,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                       initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
                       className="bg-red-200 border-2 border-pastel-charcoal p-4 text-center font-bold shadow-pixel w-full text-black"
                     >
-                      <span className="text-xl mr-2">⚠</span> Something went wrong. Please try again.
+                      <span className="text-xl mr-2">⚠</span> {errorMessage || "Something went wrong. Please try again."}
                     </m.div>
                 ) : (
                     <PixelButton type="submit" size="lg" className="w-full" isLoading={formStatus === 'submitting'}>
