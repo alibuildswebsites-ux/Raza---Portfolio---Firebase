@@ -1,7 +1,7 @@
 
 import { getFirebaseApp } from './firebaseConfig';
 import { 
-  collection, getDocs, addDoc, getFirestore
+  collection, getDocs, addDoc, getFirestore, query, where
 } from 'firebase/firestore';
 import { Project, Testimonial, ContactSubmission } from '../types';
 
@@ -11,7 +11,9 @@ const getDB = () => getFirestore(getFirebaseApp());
 // --- PROJECTS (Public Read) ---
 export const getProjects = async (): Promise<Project[]> => {
   const projectsRef = collection(getDB(), 'projects');
-  const querySnapshot = await getDocs(projectsRef);
+  // SECURITY FIX: Only fetch visible projects
+  const q = query(projectsRef, where('isVisible', '==', true));
+  const querySnapshot = await getDocs(q);
   
   const projects = querySnapshot.docs.map(doc => {
     const data = doc.data();
@@ -38,7 +40,9 @@ export const getProjects = async (): Promise<Project[]> => {
 // --- TESTIMONIALS (Public Read) ---
 export const getTestimonials = async (): Promise<Testimonial[]> => {
   const ref = collection(getDB(), 'testimonials');
-  const snapshot = await getDocs(ref);
+  // SECURITY FIX: Only fetch visible testimonials
+  const q = query(ref, where('isVisible', '==', true));
+  const snapshot = await getDocs(q);
 
   const testimonials = snapshot.docs.map(doc => {
     const data = doc.data();

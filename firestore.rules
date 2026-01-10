@@ -1,0 +1,28 @@
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if user is admin
+    function isAdmin() {
+      return request.auth != null;
+    }
+
+    // Projects: Public read only visible, Admin read/write all
+    match /projects/{projectId} {
+      allow read: if isAdmin() || (resource.data.isVisible == true);
+      allow write: if isAdmin();
+    }
+
+    // Testimonials: Public read only visible, Admin read/write all
+    match /testimonials/{testimonialId} {
+      allow read: if isAdmin() || (resource.data.isVisible == true);
+      allow write: if isAdmin();
+    }
+
+    // Messages: Public create, Admin read/write
+    match /messages/{messageId} {
+      allow create: if true; // Public can write
+      allow read, update, delete: if isAdmin();
+    }
+  }
+}
