@@ -123,6 +123,8 @@ const Testimonials: React.FC = () => {
                         <img 
                             src={`https://api.dicebear.com/7.x/pixel-art/svg?seed=${currentItem.avatarSeed || currentItem.id || 'default'}`}
                             alt="Avatar Preview"
+                            width="64"
+                            height="64"
                             className="w-full h-full object-cover"
                         />
                     </div>
@@ -196,6 +198,8 @@ const Testimonials: React.FC = () => {
                     <img 
                        src={`https://api.dicebear.com/7.x/pixel-art/svg?seed=${t.avatarSeed || t.id}`} 
                        alt="avatar" 
+                       width="48"
+                       height="48"
                        className="w-full h-full object-cover"
                     />
                  </div>

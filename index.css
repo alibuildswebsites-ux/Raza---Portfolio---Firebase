@@ -14,7 +14,7 @@
   --color-pastel-charcoal: #4A4A4A;
   --color-pastel-dark: #2D2D2D;
   --color-pastel-surface: #FFFFFF;
-  --shadow-color: rgba(0,0,0,0.2);
+  --shadow-color: rgba(0,0,0,0.3); /* Darkened from 0.2 for A11y */
 
   /* Footer Specific Colors (Day) */
   --color-footer-bg: #4A4A4A;
@@ -33,7 +33,7 @@
   --color-pastel-cream: #100b21; /* Deep Void Purple */
   --color-pastel-gray: #2a2438; /* Darker secondary background */
   
-  --color-pastel-charcoal: #E0E0E0; /* Light text for readability */
+  --color-pastel-charcoal: #F5F5F5; /* Brightened from E0E0E0 for better contrast */
   --color-pastel-dark: #FFFFFF; /* White borders for high contrast */
   --color-pastel-surface: #1e1633; /* Dark card background */
   

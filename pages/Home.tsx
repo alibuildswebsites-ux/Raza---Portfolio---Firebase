@@ -262,7 +262,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
               
               <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
                 <PixelButton onClick={scrollToProjects} size="lg" className="w-full sm:w-auto shadow-pixel-lg">View Projects</PixelButton>
-                <PixelButton onClick={() => window.open('https://calendly.com/alibuildswebsites/30min', '_blank')} variant="secondary" size="lg" className="w-full sm:w-auto shadow-pixel-lg">Start Project</PixelButton>
+                <PixelButton onClick={() => window.open('https://calendly.com/alibuildswebsites/30min', '_blank', 'noopener,noreferrer')} variant="secondary" size="lg" className="w-full sm:w-auto shadow-pixel-lg">Start Project</PixelButton>
               </div>
            </div>
         </div>
@@ -304,20 +304,20 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
               <a 
                 href="https://linkedin.com/in/alibuildswebsites" 
                 target="_blank" 
-                rel="noreferrer" 
+                rel="noreferrer noopener" 
                 onMouseEnter={playHover}
                 onClick={playClick}
-                className="flex items-center justify-center gap-2 border-2 border-pastel-charcoal px-4 py-2 hover:bg-pastel-blue transition-colors shadow-pixel-sm text-pastel-charcoal bg-pastel-surface"
+                className="flex items-center justify-center gap-2 border-2 border-pastel-charcoal px-4 py-2 hover:bg-pastel-blue transition-colors shadow-pixel-sm text-pastel-charcoal bg-pastel-surface focus:outline-none focus:ring-2 focus:ring-pastel-charcoal focus:ring-offset-2"
               >
                 <Linkedin size={20} /> LinkedIn
               </a>
               <a 
                 href="mailto:alibuildswebsites@gmail.com" 
                 target="_blank" 
-                rel="noreferrer" 
+                rel="noreferrer noopener" 
                 onMouseEnter={playHover}
                 onClick={playClick}
-                className="flex items-center justify-center gap-2 border-2 border-pastel-charcoal px-4 py-2 hover:bg-pastel-mint transition-colors shadow-pixel-sm text-pastel-charcoal bg-pastel-surface"
+                className="flex items-center justify-center gap-2 border-2 border-pastel-charcoal px-4 py-2 hover:bg-pastel-mint transition-colors shadow-pixel-sm text-pastel-charcoal bg-pastel-surface focus:outline-none focus:ring-2 focus:ring-pastel-charcoal focus:ring-offset-2"
               >
                 <Mail size={20} /> Email Me
               </a>
@@ -380,7 +380,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                 onClick={() => { setFilter(name); playClick(); }}
                 onMouseEnter={playHover}
                 className={`
-                  font-pixel text-lg px-4 py-2 border-2 border-pastel-charcoal transition-all duration-200
+                  font-pixel text-lg px-4 py-2 border-2 border-pastel-charcoal transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-pastel-charcoal focus-visible:ring-offset-2
                   ${filter === name 
                     ? 'bg-pastel-blue shadow-none translate-y-1 text-black' 
                     : 'bg-pastel-surface hover:bg-pastel-gray shadow-pixel hover:-translate-y-1 active:shadow-none active:translate-y-0 text-pastel-charcoal'
@@ -446,10 +446,10 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                           <a 
                             href={project.demoUrl} 
                             target="_blank" 
-                            rel="noreferrer"
+                            rel="noreferrer noopener"
                             onClick={playClick} 
                             onMouseEnter={playHover}
-                            className="flex-1 bg-pastel-charcoal text-pastel-cream font-pixel text-lg border-2 border-pastel-charcoal hover:bg-pastel-blue hover:text-black hover:border-pastel-charcoal transition-all flex items-center justify-center gap-2 shadow-sm"
+                            className="flex-1 bg-pastel-charcoal text-pastel-cream font-pixel text-lg border-2 border-pastel-charcoal hover:bg-pastel-blue hover:text-black hover:border-pastel-charcoal transition-all flex items-center justify-center gap-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-pastel-charcoal focus:ring-offset-2"
                           >
                             <ExternalLink size={18} /> Live Demo
                           </a>
@@ -458,10 +458,10 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                             <a 
                               href={project.githubUrl} 
                               target="_blank" 
-                              rel="noreferrer" 
+                              rel="noreferrer noopener" 
                               onClick={playClick} 
                               onMouseEnter={playHover}
-                              className="w-14 border-2 border-pastel-charcoal flex items-center justify-center hover:bg-gray-100 transition-colors bg-pastel-surface text-pastel-charcoal" 
+                              className="w-14 border-2 border-pastel-charcoal flex items-center justify-center hover:bg-gray-100 transition-colors bg-pastel-surface text-pastel-charcoal focus:outline-none focus:ring-2 focus:ring-pastel-charcoal focus:ring-offset-2" 
                               title="View Code"
                             >
                               <Github size={20} />
@@ -550,6 +550,8 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                           <img 
                               src={`https://api.dicebear.com/7.x/pixel-art/svg?seed=${testimonials[currentTestimonial].avatarSeed || testimonials[currentTestimonial].id}`} 
                               alt="client" 
+                              width="48"
+                              height="48"
                               className="w-full h-full object-cover"
                             />
                         </div>
@@ -573,14 +575,14 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                     <button 
                       onClick={() => { prevTestimonial(); playClick(); }}
                       onMouseEnter={playHover}
-                      className="touch-target p-2 border-2 border-pastel-charcoal hover:bg-pastel-blue transition-colors bg-pastel-surface shadow-pixel-sm active:translate-y-1 text-pastel-charcoal"
+                      className="touch-target p-2 border-2 border-pastel-charcoal hover:bg-pastel-blue transition-colors bg-pastel-surface shadow-pixel-sm active:translate-y-1 text-pastel-charcoal focus:outline-none focus:ring-2 focus:ring-pastel-charcoal focus:ring-offset-2"
                     >
                       <ArrowLeft size={20} />
                     </button>
                     <button 
                       onClick={() => { nextTestimonial(); playClick(); }}
                       onMouseEnter={playHover}
-                      className="touch-target p-2 border-2 border-pastel-charcoal hover:bg-pastel-blue transition-colors bg-pastel-surface shadow-pixel-sm active:translate-y-1 text-pastel-charcoal"
+                      className="touch-target p-2 border-2 border-pastel-charcoal hover:bg-pastel-blue transition-colors bg-pastel-surface shadow-pixel-sm active:translate-y-1 text-pastel-charcoal focus:outline-none focus:ring-2 focus:ring-pastel-charcoal focus:ring-offset-2"
                     >
                       <ArrowRight size={20} />
                     </button>
@@ -622,7 +624,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                   required
                   value={contactForm.name}
                   onChange={e => setContactForm({...contactForm, name: e.target.value})}
-                  className="w-full bg-pastel-surface border-2 border-pastel-charcoal p-3 focus:outline-none focus:shadow-pixel focus:border-pastel-blue transition-all text-base text-pastel-charcoal"
+                  className="w-full bg-pastel-surface border-2 border-pastel-charcoal p-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-pastel-charcoal focus:shadow-pixel focus:border-pastel-blue transition-all text-base text-pastel-charcoal"
                   placeholder="John Doe"
                 />
               </div>
@@ -634,7 +636,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                   required
                   value={contactForm.email}
                   onChange={e => setContactForm({...contactForm, email: e.target.value})}
-                  className="w-full bg-pastel-surface border-2 border-pastel-charcoal p-3 focus:outline-none focus:shadow-pixel focus:border-pastel-blue transition-all text-base text-pastel-charcoal"
+                  className="w-full bg-pastel-surface border-2 border-pastel-charcoal p-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-pastel-charcoal focus:shadow-pixel focus:border-pastel-blue transition-all text-base text-pastel-charcoal"
                   placeholder="john@example.com"
                 />
               </div>
@@ -645,7 +647,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                   type="tel" 
                   value={contactForm.phone}
                   onChange={e => setContactForm({...contactForm, phone: e.target.value})}
-                  className="w-full bg-pastel-surface border-2 border-pastel-charcoal p-3 focus:outline-none focus:shadow-pixel focus:border-pastel-blue transition-all text-base text-pastel-charcoal"
+                  className="w-full bg-pastel-surface border-2 border-pastel-charcoal p-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-pastel-charcoal focus:shadow-pixel focus:border-pastel-blue transition-all text-base text-pastel-charcoal"
                   placeholder="+1 234 567 890"
                 />
               </div>
@@ -657,15 +659,16 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                   rows={4}
                   value={contactForm.message}
                   onChange={e => setContactForm({...contactForm, message: e.target.value})}
-                  className="w-full bg-pastel-surface border-2 border-pastel-charcoal p-3 focus:outline-none focus:shadow-pixel focus:border-pastel-blue transition-all text-base text-pastel-charcoal"
+                  className="w-full bg-pastel-surface border-2 border-pastel-charcoal p-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-pastel-charcoal focus:shadow-pixel focus:border-pastel-blue transition-all text-base text-pastel-charcoal"
                   placeholder="Tell me about your website needs..."
                 />
               </div>
-              <div className="relative z-10">
+              <div className="relative z-10" aria-live="polite">
                 {formStatus === 'success' ? (
                    <m.div 
                       initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
                       className="bg-pastel-mint border-2 border-pastel-charcoal p-4 text-center font-bold flex flex-col items-center justify-center gap-2 shadow-pixel w-full py-6 text-black"
+                      role="alert"
                     >
                       <span className="text-3xl bg-white rounded-full w-12 h-12 flex items-center justify-center border-2 border-pastel-charcoal">✓</span> 
                       <span className="text-lg">Message Sent Successfully!</span>
@@ -675,6 +678,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                     <m.div 
                       initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
                       className="bg-red-200 border-2 border-pastel-charcoal p-4 text-center font-bold shadow-pixel w-full text-black"
+                      role="alert"
                     >
                       <span className="text-xl mr-2">⚠</span> {errorMessage || "Something went wrong. Please try again."}
                     </m.div>

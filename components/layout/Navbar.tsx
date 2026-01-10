@@ -111,7 +111,7 @@ const Navbar: React.FC = () => {
           
           {/* LEFT GROUP: Logo/Name */}
           <div 
-            className="flex-shrink-0 flex items-center gap-2 cursor-pointer group" 
+            className="flex-shrink-0 flex items-center gap-2 cursor-pointer group outline-none focus-visible:ring-2 focus-visible:ring-pastel-charcoal focus-visible:ring-offset-2 rounded" 
             onClick={goHome}
             onMouseEnter={playHover}
             role="button"
@@ -134,7 +134,7 @@ const Navbar: React.FC = () => {
                   onClick={() => handleScrollTo(item.id)}
                   onMouseEnter={playHover}
                   className={`
-                    font-pixel text-lg transition-all duration-200 bg-transparent border-none cursor-pointer relative px-2 py-1
+                    font-pixel text-lg transition-all duration-200 bg-transparent cursor-pointer relative px-2 py-1 outline-none focus-visible:ring-2 focus-visible:ring-pastel-charcoal focus-visible:ring-offset-2
                     ${activeSection === item.id 
                       ? 'text-pastel-charcoal bg-pastel-blue/30 border-2 border-pastel-charcoal shadow-pixel-sm -translate-y-1' 
                       : 'text-pastel-charcoal hover:text-pastel-blue border-2 border-transparent'}
@@ -150,7 +150,7 @@ const Navbar: React.FC = () => {
               <button
                 onClick={handleMuteToggle}
                 onMouseEnter={playHover}
-                className="touch-target p-2 hover:bg-pastel-blue/50 rounded-sm transition-colors text-pastel-charcoal"
+                className="touch-target p-2 hover:bg-pastel-blue/50 rounded-sm transition-colors text-pastel-charcoal outline-none focus-visible:ring-2 focus-visible:ring-pastel-charcoal"
                 title={muted ? "Unmute Sound" : "Mute Sound"}
                 aria-label={muted ? "Unmute Sound" : "Mute Sound"}
               >
@@ -161,7 +161,7 @@ const Navbar: React.FC = () => {
               <button
                 onClick={handleThemeToggle}
                 onMouseEnter={playHover}
-                className="ml-2 touch-target p-2 bg-pastel-gray border-2 border-pastel-charcoal hover:bg-pastel-blue transition-colors shadow-pixel-sm active:translate-y-[2px] active:shadow-none"
+                className="ml-2 touch-target p-2 bg-pastel-gray border-2 border-pastel-charcoal hover:bg-pastel-blue transition-colors shadow-pixel-sm active:translate-y-[2px] active:shadow-none outline-none focus-visible:ring-2 focus-visible:ring-pastel-charcoal"
                 title="Toggle Theme"
                 aria-label="Toggle Theme"
               >
@@ -174,7 +174,7 @@ const Navbar: React.FC = () => {
           <div className="md:hidden flex items-center gap-4">
              <button
                 onClick={handleMuteToggle}
-                className="touch-target p-2 text-pastel-charcoal"
+                className="touch-target p-2 text-pastel-charcoal outline-none focus-visible:ring-2 focus-visible:ring-pastel-charcoal"
                 aria-label={muted ? "Unmute Sound" : "Mute Sound"}
               >
                 {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
@@ -182,14 +182,14 @@ const Navbar: React.FC = () => {
 
             <button
               onClick={handleThemeToggle}
-              className="touch-target p-2 bg-pastel-gray border-2 border-pastel-charcoal active:translate-y-[2px]"
+              className="touch-target p-2 bg-pastel-gray border-2 border-pastel-charcoal active:translate-y-[2px] outline-none focus-visible:ring-2 focus-visible:ring-pastel-charcoal"
               aria-label="Toggle Theme"
             >
               {theme === 'day' ? <Moon size={20} /> : <Sun size={20} />}
             </button>
             <button
               onClick={() => { setIsOpen(!isOpen); playClick(); }}
-              className="touch-target inline-flex items-center justify-center p-2 text-pastel-charcoal hover:bg-pastel-blue focus:outline-none border-2 border-transparent hover:border-pastel-charcoal transition-all"
+              className="touch-target inline-flex items-center justify-center p-2 text-pastel-charcoal hover:bg-pastel-blue border-2 border-transparent hover:border-pastel-charcoal transition-all outline-none focus-visible:ring-2 focus-visible:ring-pastel-charcoal"
               aria-label="Toggle Menu"
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -212,7 +212,7 @@ const Navbar: React.FC = () => {
                   key={item.name}
                   onClick={() => handleScrollTo(item.id)}
                   className={`
-                    block w-full text-left px-3 py-3 font-pixel text-xl transition-colors border-2 hover:border-pastel-charcoal mb-2
+                    block w-full text-left px-3 py-3 font-pixel text-xl transition-colors border-2 hover:border-pastel-charcoal mb-2 outline-none focus-visible:ring-2 focus-visible:ring-pastel-charcoal
                     ${activeSection === item.id 
                       ? 'bg-pastel-blue text-black border-pastel-charcoal' 
                       : 'text-pastel-charcoal border-transparent hover:bg-pastel-blue hover:text-black'}

@@ -1,7 +1,19 @@
 
-import React, { memo, useMemo } from 'react';
+import React, { memo, useMemo, useEffect, useState } from 'react';
 
 const ParticleBackground = memo(() => {
+  const [reduceMotion, setReduceMotion] = useState(false);
+
+  useEffect(() => {
+    // Check for reduced motion preference
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReduceMotion(mediaQuery.matches);
+
+    const handler = (e: MediaQueryListEvent) => setReduceMotion(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
   // REDUCED COUNT: Kept at 15 to prevent iOS WebKit memory crashes
   const particles = useMemo(() => {
     const colors = ['bg-pastel-blue', 'bg-pastel-lavender', 'bg-pastel-mint', 'bg-pastel-peach'];
@@ -19,6 +31,8 @@ const ParticleBackground = memo(() => {
       };
     });
   }, []);
+
+  if (reduceMotion) return null;
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
