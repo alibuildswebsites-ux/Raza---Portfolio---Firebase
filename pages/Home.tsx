@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { m, AnimatePresence, Variants } from 'framer-motion';
 import Navbar from '../components/layout/Navbar';
 import PixelButton from '../components/ui/PixelButton';
 import Footer from '../components/layout/Footer';
@@ -185,7 +185,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
           <ParticleBackground />
           {theme === 'night' && <PixelStars />}
           
-          <motion.div 
+          <m.div 
              animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.5, 0.2] }}
              transition={{ duration: 4, repeat: Infinity }}
              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-white opacity-40 rounded-full blur-3xl" 
@@ -234,7 +234,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
 
       {/* --- ABOUT ME --- */}
       <Section id="about" className="bg-pastel-surface/90 backdrop-blur-sm transition-colors duration-500">
-        <motion.div 
+        <m.div 
           className="flex flex-col items-center max-w-4xl mx-auto"
           variants={sectionStagger}
           initial="hidden"
@@ -242,16 +242,16 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
           viewport={{ once: true, margin: "50px" }}
         >
           {/* 1. Heading */}
-          <motion.h2 
+          <m.h2 
             variants={fadeInUp}
             className="font-pixel text-3xl sm:text-4xl mb-6 inline-flex items-center gap-3 text-center"
           >
             <span className="w-3 h-8 sm:h-10 bg-pastel-peach border-2 border-pastel-charcoal"></span>
             About Me
-          </motion.h2>
+          </m.h2>
 
           {/* 2. Description */}
-          <motion.div
+          <m.div
             variants={fadeInUp}
             className="text-center mb-12"
           >
@@ -261,10 +261,10 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
               <p>I'm currently pursuing my career in data science, and creating digital experiences that blend clean, intuitive design with smart development.</p>
               <p className="font-bold">Let's chat about building solutions that sets you apart.</p>
             </div>
-          </motion.div>
+          </m.div>
             
           {/* 3. Buttons (Links) */}
-          <motion.div variants={fadeInUp} className="mt-0 mb-12 flex justify-center gap-4">
+          <m.div variants={fadeInUp} className="mt-0 mb-12 flex justify-center gap-4">
               <a 
                 href="https://linkedin.com/in/alibuildswebsites" 
                 target="_blank" 
@@ -285,10 +285,10 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
               >
                 <Mail size={20} /> Email Me
               </a>
-          </motion.div>
+          </m.div>
 
           {/* 4. Stats Grid */}
-          <motion.div 
+          <m.div 
             variants={gridStagger}
             className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full"
           >
@@ -298,7 +298,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
               { label: 'Satisfaction', value: '100%', icon: <Star /> },
               { label: 'Availability', value: 'Project', icon: <Briefcase /> }
             ].map((stat, idx) => (
-              <motion.div 
+              <m.div 
                 key={idx} 
                 variants={fadeInUp} // Each card uses standard fade up
                 onMouseEnter={playHover}
@@ -307,15 +307,15 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                 <div className="mb-2 text-pastel-blue scale-75 sm:scale-100 origin-left">{stat.icon}</div>
                 <div className="font-pixel text-2xl sm:text-3xl md:text-4xl mb-1 text-pastel-charcoal">{stat.value}</div>
                 <div className="text-[10px] sm:text-sm font-bold uppercase tracking-widest text-pastel-charcoal">{stat.label}</div>
-              </motion.div>
+              </m.div>
             ))}
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       </Section>
 
       {/* --- PROJECTS --- */}
       <Section id="projects" className="bg-pastel-surface border-t-4 border-pastel-charcoal transition-colors duration-500">
-        <motion.div 
+        <m.div 
            className="max-w-7xl mx-auto relative z-10 px-4 md:px-8"
            variants={sectionStagger}
            initial="hidden"
@@ -323,7 +323,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
            viewport={{ once: true, margin: "100px" }}
         >
           {/* 1. Header Text */}
-          <motion.div 
+          <m.div 
             variants={fadeInUp}
             className="flex flex-col justify-center items-center mb-8 gap-6 text-center"
           >
@@ -331,10 +331,10 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
               <h2 className="font-pixel text-3xl sm:text-4xl mb-2 sm:mb-4">My Projects</h2>
               <p className="text-base sm:text-lg max-w-2xl mx-auto">Selected works demonstrating value and functionality.</p>
             </div>
-          </motion.div>
+          </m.div>
             
           {/* 2. Filter Buttons */}
-          <motion.div 
+          <m.div 
             variants={fadeInUp}
             className="flex flex-wrap justify-center gap-3 w-full mb-12"
           >
@@ -354,17 +354,17 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                 {name}
               </button>
             ))}
-          </motion.div>
+          </m.div>
 
           {/* 3. Project Grid */}
           {!isLoading ? (
-            <motion.div 
+            <m.div 
                 variants={gridStagger}
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12 min-h-[200px]"
             >
                 <AnimatePresence mode="popLayout">
                   {filteredProjects.map((project) => (
-                    <motion.div
+                    <m.div
                       key={project.id}
                       layout // Layout prop kept here for filtering transitions
                       variants={fadeInUp} // Cards staggered by gridStagger
@@ -433,12 +433,12 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                           )}
                         </div>
                       </div>
-                    </motion.div>
+                    </m.div>
                   ))}
                 </AnimatePresence>
                 
                 {filteredProjects.length === 0 && (
-                   <motion.div 
+                   <m.div 
                      variants={fadeInUp}
                      className="w-full col-span-1 md:col-span-2 lg:col-span-3 flex flex-col items-center justify-center py-20 opacity-50 bg-gray-50 border-2 border-dashed border-gray-300"
                    >
@@ -446,15 +446,15 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                         <Code className="text-gray-400" />
                       </div>
                       <p className="font-pixel text-xl text-black">Projects coming soon.</p>
-                   </motion.div>
+                   </m.div>
                 )}
-            </motion.div>
+            </m.div>
           ) : (
             <div className="h-[200px] flex items-center justify-center">
               <span className="font-pixel text-xl animate-pulse text-pastel-charcoal">Loading projects...</span>
             </div>
           )}
-        </motion.div>
+        </m.div>
       </Section>
 
       {/* --- TESTIMONIALS --- */}
@@ -462,7 +462,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
         <PixelCloud top="5%" size="w-24 md:w-32" duration={50} delay={0} className="opacity-50" />
         <PixelCloud top="80%" size="w-32 md:w-48" duration={60} delay={10} className="opacity-50" />
         
-        <motion.div
+        <m.div
            className="max-w-4xl mx-auto relative z-10 px-0 sm:px-4"
            variants={sectionStagger}
            initial="hidden"
@@ -470,12 +470,12 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
            viewport={{ once: true, margin: "100px" }}
         >
           {/* 1. Heading */}
-          <motion.h2 variants={fadeInUp} className="font-pixel text-3xl sm:text-4xl text-center mb-8 md:mb-16 relative z-10">
+          <m.h2 variants={fadeInUp} className="font-pixel text-3xl sm:text-4xl text-center mb-8 md:mb-16 relative z-10">
             What Clients Say
-          </motion.h2>
+          </m.h2>
           
           {/* 2. Testimonial Card */}
-          <motion.div variants={fadeInUp}>
+          <m.div variants={fadeInUp}>
             {testimonials.length > 0 ? (
               <div 
                 className="bg-pastel-surface border-2 border-pastel-charcoal p-6 md:p-12 shadow-pixel-lg relative mx-2 sm:mx-0 group cursor-pointer"
@@ -486,13 +486,13 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                   <Star className="fill-black text-black" />
                 </div>
                 
-                <motion.div 
+                <m.div 
                   className="overflow-hidden"
                   animate={{ height: "auto" }}
                   transition={{ duration: 0.5, ease: "easeInOut" }}
                 >
                   <AnimatePresence mode='wait'>
-                    <motion.div
+                    <m.div
                       key={currentTestimonial}
                       variants={testimonialCardVariants}
                       initial="initial"
@@ -528,9 +528,9 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                             )}
                         </div>
                       </div>
-                    </motion.div>
+                    </m.div>
                   </AnimatePresence>
-                </motion.div>
+                </m.div>
 
                 {testimonials.length > 1 && (
                   <div className="absolute bottom-4 right-4 flex gap-2 z-20">
@@ -554,13 +554,13 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
             ) : (
               <div className="text-center font-pixel text-xl">Testimonials coming soon!</div>
             )}
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       </Section>
 
       {/* --- CONTACT --- */}
       <Section id="contact" className="bg-pastel-surface mb-12 md:mb-20 transition-colors duration-500">
-        <motion.div 
+        <m.div 
            className="max-w-3xl mx-auto flex flex-col gap-16"
            variants={sectionStagger}
            initial="hidden"
@@ -568,7 +568,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
            viewport={{ once: true, margin: "100px" }}
         >
           {/* 1. Header & Form */}
-          <motion.div variants={fadeInUp} className="w-full">
+          <m.div variants={fadeInUp} className="w-full">
             <div className="text-center mb-8">
               <h2 className="font-pixel text-3xl sm:text-4xl mb-4 text-pastel-charcoal">Let's Build Something Great</h2>
               <p className="mb-0 text-base sm:text-lg text-pastel-charcoal">Have a project in mind? I'm available for freelance work. Send me the details!</p>
@@ -623,21 +623,21 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
               </div>
               <div className="relative z-10">
                 {formStatus === 'success' ? (
-                   <motion.div 
+                   <m.div 
                       initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
                       className="bg-pastel-mint border-2 border-pastel-charcoal p-4 text-center font-bold flex flex-col items-center justify-center gap-2 shadow-pixel w-full py-6 text-black"
                     >
                       <span className="text-3xl bg-white rounded-full w-12 h-12 flex items-center justify-center border-2 border-pastel-charcoal">✓</span> 
                       <span className="text-lg">Message Sent Successfully!</span>
                       <span className="text-sm font-normal">I'll get back to you within 24 hours.</span>
-                    </motion.div>
+                    </m.div>
                 ) : formStatus === 'error' ? (
-                    <motion.div 
+                    <m.div 
                       initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
                       className="bg-red-200 border-2 border-pastel-charcoal p-4 text-center font-bold shadow-pixel w-full text-black"
                     >
                       <span className="text-xl mr-2">⚠</span> Something went wrong. Please try again.
-                    </motion.div>
+                    </m.div>
                 ) : (
                     <PixelButton type="submit" size="lg" className="w-full" isLoading={formStatus === 'submitting'}>
                       Send Message
@@ -645,10 +645,10 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                 )}
               </div>
             </form>
-          </motion.div>
+          </m.div>
           
           {/* 2. Calendly Section */}
-          <motion.div variants={fadeInUp} className="w-full flex flex-col items-center">
+          <m.div variants={fadeInUp} className="w-full flex flex-col items-center">
              <div className="text-center mb-6">
                 <h3 className="font-pixel text-2xl text-pastel-charcoal">Or Schedule a Free 30-Minute Consultation</h3>
              </div>
@@ -661,8 +661,8 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                    title="Schedule a consultation"
                  ></iframe>
              </div>
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       </Section>
 
       <Footer />

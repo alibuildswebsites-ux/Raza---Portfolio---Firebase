@@ -1,9 +1,9 @@
 
 import { memo, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 
 export const PixelCloud = memo(({ size = "w-32", className = "", duration = 25, delay = 0, top = "10%" }: { size?: string, className?: string, duration?: number, delay?: number, top?: string }) => (
-  <motion.div
+  <m.div
     initial={{ x: "-20vw" }}
     animate={{ x: "110vw" }}
     transition={{ duration, repeat: Infinity, delay, ease: "linear" }}
@@ -50,11 +50,11 @@ export const PixelCloud = memo(({ size = "w-32", className = "", duration = 25, 
           <rect x="14" y="6" width="1" height="8" />
        </g>
     </svg>
-  </motion.div>
+  </m.div>
 ));
 
 export const PixelSun = memo(({ className = "" }: { className?: string }) => (
-  <motion.div 
+  <m.div 
     initial={{ y: 20, opacity: 0, rotate: 0 }}
     animate={{ y: 0, opacity: 0.8, rotate: 360 }}
     transition={{ 
@@ -74,11 +74,11 @@ export const PixelSun = memo(({ className = "" }: { className?: string }) => (
        <rect x="2" y="11" width="3" height="2" fill="#FFB5A7" />
        <rect x="19" y="11" width="3" height="2" fill="#FFB5A7" />
     </svg>
-  </motion.div>
+  </m.div>
 ));
 
 export const PixelMoon = memo(({ className = "" }: { className?: string }) => (
-  <motion.div 
+  <m.div 
     initial={{ y: 20, opacity: 0 }}
     animate={{ y: 0, opacity: 1 }}
     transition={{ duration: 1 }}
@@ -90,7 +90,7 @@ export const PixelMoon = memo(({ className = "" }: { className?: string }) => (
        <rect x="12" y="16" width="1" height="1" fill="#E0E0E0" />
        <rect x="14" y="6" width="1" height="1" fill="#E0E0E0" />
     </svg>
-  </motion.div>
+  </m.div>
 ));
 
 export const PixelStars = memo(() => {
@@ -105,7 +105,7 @@ export const PixelStars = memo(() => {
   return (
     <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
       {stars.map((s) => (
-         <motion.div 
+         <m.div 
             key={s.id}
             initial={{ opacity: 0.2 }}
             animate={{ opacity: [0.2, 1, 0.2] }}

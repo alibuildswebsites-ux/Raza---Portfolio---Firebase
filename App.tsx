@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, m, LazyMotion, domAnimation } from 'framer-motion';
 import ScrollToTop from './components/ui/ScrollToTop';
 import Preloader from './components/ui/Preloader';
 import * as db from './services/storage';
@@ -34,7 +35,7 @@ const Settings = lazy(() => import('./pages/admin/Settings'));
 // Skeleton for Login page
 const LoginSkeleton = () => (
   <div className="min-h-screen bg-pastel-cream flex items-center justify-center p-4">
-    <motion.div 
+    <m.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -46,14 +47,14 @@ const LoginSkeleton = () => (
         <div className="h-12 bg-pastel-gray animate-pulse"></div>
         <div className="h-12 bg-pastel-blue/30 animate-pulse"></div>
       </div>
-    </motion.div>
+    </m.div>
   </div>
 );
 
 // Skeleton for Admin Dashboard
 const AdminSkeleton = () => (
   <div className="min-h-screen bg-pastel-cream flex">
-    <motion.div 
+    <m.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.2 }}
@@ -64,7 +65,7 @@ const AdminSkeleton = () => (
           <div key={i} className="h-12 bg-gray-700 animate-pulse rounded"></div>
         ))}
       </div>
-    </motion.div>
+    </m.div>
     <div className="flex-1 p-8">
       <div className="h-8 bg-pastel-gray animate-pulse w-1/3 mb-8"></div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -159,87 +160,89 @@ const App: React.FC = () => {
 
   return (
     <LazyLoadErrorBoundary>
-      <ThemeProvider>
-        <AudioProvider>
-          <HashRouter>
-            <ScrollToTop />
-            <AnimatePresence>
-              {loading && <Preloader onComplete={() => setLoading(false)} />}
-            </AnimatePresence>
+      <LazyMotion features={domAnimation}>
+        <ThemeProvider>
+          <AudioProvider>
+            <HashRouter>
+              <ScrollToTop />
+              <AnimatePresence>
+                {loading && <Preloader onComplete={() => setLoading(false)} />}
+              </AnimatePresence>
 
-            <Routes>
-              {/* PUBLIC ROUTE - Eager loaded */}
-              <Route path="/" element={<Home startTypewriter={!loading} />} />
+              <Routes>
+                {/* PUBLIC ROUTE - Eager loaded */}
+                <Route path="/" element={<Home startTypewriter={!loading} />} />
 
-              {/* AUTH ROUTE - Lazy loaded with skeleton */}
-              <Route 
-                path="/admin" 
-                element={
-                  <Suspense fallback={<LoginSkeleton />}>
-                    <Login />
-                  </Suspense>
-                } 
-              />
+                {/* AUTH ROUTE - Lazy loaded with skeleton */}
+                <Route 
+                  path="/admin" 
+                  element={
+                    <Suspense fallback={<LoginSkeleton />}>
+                      <Login />
+                    </Suspense>
+                  } 
+                />
 
-              {/* ADMIN ROUTES - Lazy loaded with skeleton */}
-              <Route 
-                path="/dashboard" 
-                element={
-                  <ProtectedRoute>
-                    <Suspense fallback={<AdminSkeleton />}>
-                      <AdminLayout />
-                    </Suspense>
-                  </ProtectedRoute>
-                }
-              >
+                {/* ADMIN ROUTES - Lazy loaded with skeleton */}
                 <Route 
-                  index 
+                  path="/dashboard" 
                   element={
-                    <Suspense fallback={<div className="animate-pulse p-4">Loading dashboard...</div>}>
-                      <Dashboard />
-                    </Suspense>
-                  } 
-                />
-                <Route 
-                  path="projects" 
-                  element={
-                    <Suspense fallback={<div className="animate-pulse p-4">Loading projects...</div>}>
-                      <Projects />
-                    </Suspense>
-                  } 
-                />
-                <Route 
-                  path="testimonials" 
-                  element={
-                    <Suspense fallback={<div className="animate-pulse p-4">Loading testimonials...</div>}>
-                      <Testimonials />
-                    </Suspense>
-                  } 
-                />
-                <Route 
-                  path="messages" 
-                  element={
-                    <Suspense fallback={<div className="animate-pulse p-4">Loading messages...</div>}>
-                      <Messages />
-                    </Suspense>
-                  } 
-                />
-                <Route 
-                  path="settings" 
-                  element={
-                    <Suspense fallback={<div className="animate-pulse p-4">Loading settings...</div>}>
-                      <Settings />
-                    </Suspense>
-                  } 
-                />
-              </Route>
+                    <ProtectedRoute>
+                      <Suspense fallback={<AdminSkeleton />}>
+                        <AdminLayout />
+                      </Suspense>
+                    </ProtectedRoute>
+                  }
+                >
+                  <Route 
+                    index 
+                    element={
+                      <Suspense fallback={<div className="animate-pulse p-4">Loading dashboard...</div>}>
+                        <Dashboard />
+                      </Suspense>
+                    } 
+                  />
+                  <Route 
+                    path="projects" 
+                    element={
+                      <Suspense fallback={<div className="animate-pulse p-4">Loading projects...</div>}>
+                        <Projects />
+                      </Suspense>
+                    } 
+                  />
+                  <Route 
+                    path="testimonials" 
+                    element={
+                      <Suspense fallback={<div className="animate-pulse p-4">Loading testimonials...</div>}>
+                        <Testimonials />
+                      </Suspense>
+                    } 
+                  />
+                  <Route 
+                    path="messages" 
+                    element={
+                      <Suspense fallback={<div className="animate-pulse p-4">Loading messages...</div>}>
+                        <Messages />
+                      </Suspense>
+                    } 
+                  />
+                  <Route 
+                    path="settings" 
+                    element={
+                      <Suspense fallback={<div className="animate-pulse p-4">Loading settings...</div>}>
+                        <Settings />
+                      </Suspense>
+                    } 
+                  />
+                </Route>
 
-              {/* CATCH-ALL */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </HashRouter>
-        </AudioProvider>
-      </ThemeProvider>
+                {/* CATCH-ALL */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </HashRouter>
+          </AudioProvider>
+        </ThemeProvider>
+      </LazyMotion>
     </LazyLoadErrorBoundary>
   );
 };

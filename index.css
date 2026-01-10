@@ -61,13 +61,10 @@ body {
   color: var(--color-pastel-charcoal);
   overflow-x: hidden;
   transition: background-color 0.5s ease, color 0.5s ease;
-  /* Standard Pixel Arrow */
-  cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAD1BMVEUAAAD///8AAAAzMzP///+a0O0wAAAAAXRSTlMAQObYZgAAAFNJREFUCNdjYMAEAyA4AMQAiM4A4hYgYgYQhwCIGUE4EIQDiJmBOGYgDqK4gYgTiIOoriBiA+KguiuI2IA4qO4KImYgDqK4gYgTiIOoriBiA+KguiuI2IA4qO4KImYgDqK4gYgTiIOoriBiA+IgCgA1+xW14g4FzAAAAABJRU5ErkJggg=='), auto;
 }
 
 a, button, [role="button"], input, select, textarea {
-  /* Pixel Hand Pointer */
-  cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAD1BMVEUAAAD///8AAAAzMzP///+a0O0wAAAAAXRSTlMAQObYZgAAAFpJREFUCNdjYMAEAyA4AMQAIJ6ZgYgTiGNgYgDiWICIGYgjgIghgIghiIOIGYgjgIghiIOIGYgjgIghiIOIGYgjgIghiIOIGYgjgIghiIOIGYgjgIghiIMoAAA+cxS18q1GzgAAAABJRU5ErkJggg=='), pointer;
+  /* Cursor styles removed for performance and size */
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */

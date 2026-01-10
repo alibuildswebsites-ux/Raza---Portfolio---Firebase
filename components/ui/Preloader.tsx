@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { PixelMoon, PixelCloud, PixelStars } from './PixelDecorations';
 import Typewriter from './Typewriter';
 
@@ -21,7 +21,7 @@ const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
   }, [onComplete]);
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 1 }}
       animate={{ opacity: exit ? 0 : 1 }}
       transition={{ duration: 0.8 }}
@@ -47,7 +47,7 @@ const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
              <Typewriter text="Hi, nice to see you here. I'm Raza A." delay={30} />
         </div>
       </div>
-    </motion.div>
+    </m.div>
   );
 };
 

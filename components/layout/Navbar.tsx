@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Rocket, Sun, Moon, Volume2, VolumeX } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import { useAudio } from '../../context/AudioContext';
@@ -200,7 +200,7 @@ const Navbar: React.FC = () => {
 
       <AnimatePresence>
         {isOpen && (
-          <motion.div
+          <m.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -222,7 +222,7 @@ const Navbar: React.FC = () => {
                 </button>
               ))}
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </nav>

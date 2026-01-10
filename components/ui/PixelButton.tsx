@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { motion, HTMLMotionProps } from 'framer-motion';
+import { m, HTMLMotionProps } from 'framer-motion';
 import { useAudio } from '../../context/AudioContext';
 
 // Use intersection type to combine HTML attributes with Motion props properly
@@ -49,7 +49,7 @@ const PixelButton: React.FC<PixelButtonProps> = ({
   };
 
   return (
-    <motion.button
+    <m.button
       whileHover={{ scale: disabled || isLoading ? 1 : 1.02 }}
       whileTap={{ scale: disabled || isLoading ? 1 : 0.98 }}
       className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
@@ -67,7 +67,7 @@ const PixelButton: React.FC<PixelButtonProps> = ({
           Processing...
         </span>
       ) : children}
-    </motion.button>
+    </m.button>
   );
 };
 
