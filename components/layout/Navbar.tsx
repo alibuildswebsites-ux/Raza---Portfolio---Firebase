@@ -150,7 +150,7 @@ const Navbar: React.FC = () => {
               <button
                 onClick={handleMuteToggle}
                 onMouseEnter={playHover}
-                className="p-2 hover:bg-pastel-blue/50 rounded-sm transition-colors text-pastel-charcoal"
+                className="touch-target p-2 hover:bg-pastel-blue/50 rounded-sm transition-colors text-pastel-charcoal"
                 title={muted ? "Unmute Sound" : "Mute Sound"}
                 aria-label={muted ? "Unmute Sound" : "Mute Sound"}
               >
@@ -161,7 +161,7 @@ const Navbar: React.FC = () => {
               <button
                 onClick={handleThemeToggle}
                 onMouseEnter={playHover}
-                className="ml-2 p-2 bg-pastel-gray border-2 border-pastel-charcoal hover:bg-pastel-blue transition-colors shadow-pixel-sm active:translate-y-[2px] active:shadow-none"
+                className="ml-2 touch-target p-2 bg-pastel-gray border-2 border-pastel-charcoal hover:bg-pastel-blue transition-colors shadow-pixel-sm active:translate-y-[2px] active:shadow-none"
                 title="Toggle Theme"
                 aria-label="Toggle Theme"
               >
@@ -174,7 +174,7 @@ const Navbar: React.FC = () => {
           <div className="md:hidden flex items-center gap-4">
              <button
                 onClick={handleMuteToggle}
-                className="p-2 text-pastel-charcoal"
+                className="touch-target p-2 text-pastel-charcoal"
                 aria-label={muted ? "Unmute Sound" : "Mute Sound"}
               >
                 {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
@@ -182,14 +182,14 @@ const Navbar: React.FC = () => {
 
             <button
               onClick={handleThemeToggle}
-              className="p-2 bg-pastel-gray border-2 border-pastel-charcoal active:translate-y-[2px]"
+              className="touch-target p-2 bg-pastel-gray border-2 border-pastel-charcoal active:translate-y-[2px]"
               aria-label="Toggle Theme"
             >
               {theme === 'day' ? <Moon size={20} /> : <Sun size={20} />}
             </button>
             <button
               onClick={() => { setIsOpen(!isOpen); playClick(); }}
-              className="inline-flex items-center justify-center p-2 text-pastel-charcoal hover:bg-pastel-blue focus:outline-none border-2 border-transparent hover:border-pastel-charcoal transition-all"
+              className="touch-target inline-flex items-center justify-center p-2 text-pastel-charcoal hover:bg-pastel-blue focus:outline-none border-2 border-transparent hover:border-pastel-charcoal transition-all"
               aria-label="Toggle Menu"
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}

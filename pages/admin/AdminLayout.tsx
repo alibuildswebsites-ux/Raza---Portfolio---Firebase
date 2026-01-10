@@ -58,7 +58,7 @@ const AdminLayout: React.FC = () => {
   const sidebarBg = "bg-[#2D2D2D] text-white";
 
   return (
-    <div className="min-h-screen bg-pastel-cream flex flex-col md:flex-row font-sans text-pastel-charcoal transition-colors duration-500 relative">
+    <div className="min-h-[100dvh] bg-pastel-cream flex flex-col md:flex-row font-sans text-pastel-charcoal transition-colors duration-500 relative">
       
       {/* Mobile Header - FIXED top */}
       <div className={`md:hidden ${sidebarBg} h-16 px-4 flex justify-between items-center shadow-md z-50 fixed top-0 left-0 w-full`}>

@@ -34,7 +34,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-pastel-cream flex flex-col items-center justify-center p-4 relative z-50 text-pastel-charcoal transition-colors duration-500">
+    <div className="min-h-[100dvh] bg-pastel-cream flex flex-col items-center justify-center p-4 relative z-50 text-pastel-charcoal transition-colors duration-500">
       <div className="bg-pastel-surface border-4 border-pastel-charcoal p-8 w-full max-w-md shadow-pixel-lg">
         <h2 className="font-pixel text-4xl text-center mb-8 text-pastel-charcoal">ADMIN LOGIN</h2>
         

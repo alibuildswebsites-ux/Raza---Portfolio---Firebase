@@ -51,6 +51,9 @@ html {
   background-color: var(--color-pastel-cream);
   transition: background-color 0.5s ease;
   
+  /* Fix iOS scrolling momentum */
+  -webkit-overflow-scrolling: touch;
+  
   /* Hide scrollbar for IE, Edge and Firefox */
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
@@ -61,6 +64,22 @@ body {
   color: var(--color-pastel-charcoal);
   overflow-x: hidden;
   transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* Ensure minimum touch target size for accessibility on mobile */
+.touch-target {
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Disable custom cursors on touch devices to prevent sticky hover states */
+@media (hover: none) and (pointer: coarse) {
+  * {
+    cursor: auto !important;
+  }
 }
 
 a, button, [role="button"], input, select, textarea {

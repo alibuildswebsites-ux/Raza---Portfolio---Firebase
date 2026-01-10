@@ -178,7 +178,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
   };
 
   return (
-    <div className="min-h-screen bg-pastel-cream font-sans text-pastel-charcoal selection:bg-pastel-lavender overflow-x-hidden transition-colors duration-500">
+    <div className="min-h-[100dvh] bg-pastel-cream font-sans text-pastel-charcoal selection:bg-pastel-lavender overflow-x-hidden transition-colors duration-500">
       <Navbar />
 
       {/* --- HERO SECTION --- */}
@@ -541,14 +541,14 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                     <button 
                       onClick={() => { prevTestimonial(); playClick(); }}
                       onMouseEnter={playHover}
-                      className="p-2 border-2 border-pastel-charcoal hover:bg-pastel-blue transition-colors bg-pastel-surface shadow-pixel-sm active:translate-y-1 text-pastel-charcoal"
+                      className="touch-target p-2 border-2 border-pastel-charcoal hover:bg-pastel-blue transition-colors bg-pastel-surface shadow-pixel-sm active:translate-y-1 text-pastel-charcoal"
                     >
                       <ArrowLeft size={20} />
                     </button>
                     <button 
                       onClick={() => { nextTestimonial(); playClick(); }}
                       onMouseEnter={playHover}
-                      className="p-2 border-2 border-pastel-charcoal hover:bg-pastel-blue transition-colors bg-pastel-surface shadow-pixel-sm active:translate-y-1 text-pastel-charcoal"
+                      className="touch-target p-2 border-2 border-pastel-charcoal hover:bg-pastel-blue transition-colors bg-pastel-surface shadow-pixel-sm active:translate-y-1 text-pastel-charcoal"
                     >
                       <ArrowRight size={20} />
                     </button>
@@ -578,7 +578,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
               <p className="mb-0 text-base sm:text-lg text-pastel-charcoal">Have a project in mind? I'm available for freelance work. Send me the details!</p>
             </div>
             
-            <form onSubmit={handleContactSubmit} className="space-y-4 md:space-y-6 bg-pastel-cream p-5 sm:p-8 border-2 border-pastel-charcoal shadow-pixel relative overflow-hidden">
+            <form onSubmit={handleContactSubmit} className="space-y-4 md:space-y-6 bg-pastel-cream w-full p-4 sm:p-8 border-2 border-pastel-charcoal shadow-pixel relative overflow-hidden">
               <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
                  <Send size={100} />
               </div>

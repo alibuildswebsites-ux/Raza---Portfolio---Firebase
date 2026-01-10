@@ -32,7 +32,7 @@ const Settings = lazy(() => import('./pages/admin/Settings'));
 // ============================================================================
 
 const LoginSkeleton = () => (
-  <div className="min-h-screen bg-pastel-cream flex items-center justify-center p-4">
+  <div className="min-h-[100dvh] bg-pastel-cream flex items-center justify-center p-4">
     <m.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -50,7 +50,7 @@ const LoginSkeleton = () => (
 );
 
 const AdminSkeleton = () => (
-  <div className="min-h-screen bg-pastel-cream flex">
+  <div className="min-h-[100dvh] bg-pastel-cream flex">
     <m.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -102,7 +102,7 @@ class LazyLoadErrorBoundary extends React.Component<
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-pastel-cream flex items-center justify-center p-4">
+        <div className="min-h-[100dvh] bg-pastel-cream flex items-center justify-center p-4">
           <div className="bg-pastel-surface border-4 border-red-500 p-8 max-w-md text-center">
             <h2 className="font-pixel text-2xl text-red-500 mb-4">Chunk Load Error</h2>
             <p className="mb-6 text-pastel-charcoal">
