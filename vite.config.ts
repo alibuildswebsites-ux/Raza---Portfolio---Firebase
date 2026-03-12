@@ -9,7 +9,7 @@ export default defineConfig({
         manualChunks: {
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
           'firebase-vendor': ['firebase/app', 'firebase/auth', 'firebase/firestore'],
-          'ui-vendor': ['framer-motion', 'lucide-react', '@emailjs/browser']
+          'ui-vendor': ['lucide-react', '@emailjs/browser']
         }
       }
     }

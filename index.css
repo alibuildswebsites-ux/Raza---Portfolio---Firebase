@@ -120,3 +120,32 @@ input, textarea, select {
     opacity: 0;
   }
 }
+
+@keyframes cloud-drift {
+  from {
+    transform: translateX(-20vw);
+  }
+  to {
+    transform: translateX(110vw);
+  }
+}
+
+@keyframes star-twinkle {
+  0%, 100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1; /* Note: The Sun sets its base opacity to 0.8 via tailwind class, this will override to 1 if we aren't careful, so we should let tailwind handle base opacity and just animate transform, or just use 1 here and let the container handle it */
+    transform: translateY(0);
+  }
+}

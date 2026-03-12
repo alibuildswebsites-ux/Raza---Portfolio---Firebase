@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Rocket, Sun, Moon, Volume2, VolumeX } from 'lucide-react';
-import { m, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import { useAudio } from '../../context/AudioContext';
@@ -198,33 +197,32 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      <AnimatePresence>
-        {isOpen && (
-          <m.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className={`md:hidden bg-pastel-cream border-b-4 overflow-hidden ${borderColorClass}`}
-          >
-            <div className="px-2 pt-2 pb-6 space-y-1 sm:px-3 shadow-lg">
-              {navItems.map((item) => (
-                <button
-                  key={item.name}
-                  onClick={() => handleScrollTo(item.id)}
-                  className={`
-                    block w-full text-left px-3 py-3 font-pixel text-xl transition-colors border-2 hover:border-pastel-charcoal mb-2 outline-none focus-visible:ring-2 focus-visible:ring-pastel-charcoal
-                    ${activeSection === item.id 
-                      ? 'bg-pastel-blue text-black border-pastel-charcoal' 
-                      : 'text-pastel-charcoal border-transparent hover:bg-pastel-blue hover:text-black'}
-                  `}
-                >
-                  {item.name}
-                </button>
-              ))}
-            </div>
-          </m.div>
-        )}
-      </AnimatePresence>
+      {/* Mobile Menu Dropdown */}
+      <div 
+        className={`md:hidden bg-pastel-cream border-b-4 overflow-hidden ${borderColorClass} transition-all duration-300 ease-in-out grid ${
+          isOpen ? 'grid-rows-[1fr] opacity-100 border-b-4' : 'grid-rows-[0fr] opacity-0 border-b-0'
+        }`}
+      >
+        {/* We need an inner wrapper that has min-h-0 for the grid trick to work perfectly */}
+        <div className="min-h-0">
+          <div className="px-2 pt-2 pb-6 space-y-1 sm:px-3 shadow-lg">
+            {navItems.map((item) => (
+              <button
+                key={item.name}
+                onClick={() => handleScrollTo(item.id)}
+                className={`
+                  block w-full text-left px-3 py-3 font-pixel text-xl transition-colors border-2 hover:border-pastel-charcoal mb-2 outline-none focus-visible:ring-2 focus-visible:ring-pastel-charcoal
+                  ${activeSection === item.id 
+                    ? 'bg-pastel-blue text-black border-pastel-charcoal' 
+                    : 'text-pastel-charcoal border-transparent hover:bg-pastel-blue hover:text-black'}
+                `}
+              >
+                {item.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
     </nav>
   );
 };

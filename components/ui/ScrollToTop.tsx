@@ -1,35 +1,47 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowUp } from 'lucide-react';
-import { m, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 
 const ScrollToTop: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const buttonRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
 
-  // Hook for scroll position monitoring
-  const { scrollY } = useScroll();
-  
-  // Transform scroll Y position to scale value
-  // 500px (Trigger point): Scale 0.5
-  // 1500px: Scale 1.0
-  // This ensures the button grows gradually as user scrolls further down
-  const buttonScale = useTransform(scrollY, [500, 1500], [0.5, 1]);
-
   useEffect(() => {
-    // Use the Motion scrollY value to trigger state changes
-    // This is more performant than a native scroll listener when using Framer Motion
-    const unsubscribe = scrollY.on("change", (latest) => {
-      if (latest > 500) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
-    });
+    let ticking = false;
 
-    return () => unsubscribe();
-  }, [scrollY]);
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollY = window.scrollY;
+          
+          if (scrollY > 500) {
+            setIsVisible(true);
+          } else {
+            setIsVisible(false);
+          }
+          
+          const newScale = Math.min(Math.max(0.5, 0.5 + ((scrollY - 500) / 1000) * 0.5), 1);
+          
+          if (buttonRef.current) {
+            buttonRef.current.style.transform = `scale(${newScale})`;
+          }
+          
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // Initial check
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   // Hide on admin dashboard
   if (location.pathname.startsWith('/dashboard')) {
@@ -60,17 +72,15 @@ const ScrollToTop: React.FC = () => {
   };
 
   return (
-    <AnimatePresence>
-      {isVisible && (
-        <m.button
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
-          style={{ scale: buttonScale }}
-          whileHover={{ y: -5 }}
-          whileTap={{ y: 0 }}
+    <div 
+      className={`fixed bottom-6 right-6 z-40 transition-all duration-300 ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
+      }`}
+    >
+      <div ref={buttonRef} className="origin-center" style={{ transform: 'scale(0.5)' }}>
+        <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 z-40 bg-pastel-blue text-pastel-charcoal border-2 border-pastel-charcoal p-3 shadow-pixel hover:shadow-pixel-lg active:shadow-pixel transition-shadow group flex items-center justify-center origin-center"
+          className="bg-pastel-blue text-pastel-charcoal border-2 border-pastel-charcoal p-3 shadow-pixel hover:shadow-pixel-lg active:shadow-pixel transition-all duration-300 transform-gpu group flex items-center justify-center hover:-translate-y-1 active:translate-y-0"
           title="Back to Top"
           aria-label="Scroll to top"
         >
@@ -79,9 +89,9 @@ const ScrollToTop: React.FC = () => {
           <span className="absolute right-full mr-4 bg-white border-2 border-pastel-charcoal px-2 py-1 text-xs font-pixel whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity shadow-pixel-sm pointer-events-none hidden md:block">
             Top
           </span>
-        </m.button>
-      )}
-    </AnimatePresence>
+        </button>
+      </div>
+    </div>
   );
 };
 

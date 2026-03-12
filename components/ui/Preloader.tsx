@@ -1,6 +1,4 @@
-
 import React, { useEffect, useState } from 'react';
-import { m } from 'framer-motion';
 import { PixelMoon, PixelCloud, PixelStars } from './PixelDecorations';
 import Typewriter from './Typewriter';
 
@@ -21,11 +19,10 @@ const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
   }, [onComplete]);
 
   return (
-    <m.div
-      initial={{ opacity: 1 }}
-      animate={{ opacity: exit ? 0 : 1 }}
-      transition={{ duration: 0.8 }}
-      className="fixed inset-0 z-[100] bg-[#100b21] flex flex-col items-center justify-center overflow-hidden"
+    <div
+      className={`fixed inset-0 z-[100] bg-[#100b21] flex flex-col items-center justify-center overflow-hidden transition-opacity duration-1000 ${
+        exit ? 'opacity-0 pointer-events-none' : 'opacity-100'
+      }`}
     >
       {/* Background Elements */}
       <div className="absolute inset-0 pointer-events-none">
@@ -47,7 +44,7 @@ const Preloader: React.FC<PreloaderProps> = ({ onComplete }) => {
              <Typewriter text="Hi, nice to see you here. I'm Raza A." delay={30} />
         </div>
       </div>
-    </m.div>
+    </div>
   );
 };
 

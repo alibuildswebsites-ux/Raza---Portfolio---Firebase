@@ -1,10 +1,8 @@
-
 import React from 'react';
-import { m, HTMLMotionProps } from 'framer-motion';
 import { useAudio } from '../../context/AudioContext';
 
-// Use intersection type to combine HTML attributes with Motion props properly
-type PixelButtonProps = HTMLMotionProps<"button"> & {
+// Use intersection type to combine HTML attributes properly
+type PixelButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: 'primary' | 'secondary' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
@@ -24,7 +22,7 @@ const PixelButton: React.FC<PixelButtonProps> = ({
   const { playHover, playClick } = useAudio();
   
   // Updated focus styles for better A11y (Visible Focus Ring)
-  const baseStyles = "relative font-pixel uppercase tracking-wide border-2 border-pastel-charcoal transition-all duration-75 focus:outline-none focus-visible:ring-2 focus-visible:ring-pastel-charcoal focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center";
+  const baseStyles = "relative font-pixel uppercase tracking-wide border-2 border-pastel-charcoal transition-all transition-transform duration-150 hover:scale-[1.02] active:scale-[0.98] disabled:hover:scale-100 disabled:active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-pastel-charcoal focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center";
   
   const variants = {
     // Force text-black for colored buttons to ensure readability in Night (Neon) mode
@@ -50,9 +48,7 @@ const PixelButton: React.FC<PixelButtonProps> = ({
   };
 
   return (
-    <m.button
-      whileHover={{ scale: disabled || isLoading ? 1 : 1.02 }}
-      whileTap={{ scale: disabled || isLoading ? 1 : 0.98 }}
+    <button
       className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
       disabled={isLoading || disabled}
       onMouseEnter={handleMouseEnter}
@@ -68,7 +64,7 @@ const PixelButton: React.FC<PixelButtonProps> = ({
           Processing...
         </span>
       ) : children}
-    </m.button>
+    </button>
   );
 };
 

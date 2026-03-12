@@ -1,6 +1,7 @@
-
-import React, { useState, useEffect, useMemo } from 'react';
-import { m, AnimatePresence, Variants } from 'framer-motion';
+import React, { useState, useEffect, useLayoutEffect, useRef, useMemo } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Flip } from 'gsap/Flip';
 import Navbar from '../components/layout/Navbar';
 import PixelButton from '../components/ui/PixelButton';
 import Footer from '../components/layout/Footer';
@@ -15,54 +16,14 @@ import { Project, Testimonial } from '../types';
 import { useTheme } from '../context/ThemeContext';
 import { useAudio } from '../context/AudioContext';
 
-// --- UNIFIED ANIMATION VARIANTS ---
-
-// 1. Section Parent: Controls the timing of the main blocks (Heading -> Desc -> Buttons -> Grid)
-const sectionStagger: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2, // Delay between each block
-      delayChildren: 0.1,
-      when: "beforeChildren"
-    }
-  }
-};
-
-// 2. Standard Item: Used for Headings, Text, Button Rows, Forms
-const fadeInUp: Variants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { duration: 0.6, ease: "easeOut" } 
-  }
-};
-
-// 3. Grid Container: Slides up like an item, but then staggers its internal cards
-const gridStagger: Variants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: "easeOut",
-      staggerChildren: 0.1, // Faster stagger for cards/stats
-      when: "beforeChildren"
-    }
-  }
-};
-
 // Section Wrapper
-const Section: React.FC<{ children: React.ReactNode; id: string; className?: string }> = ({ children, id, className = '' }) => (
-  <section id={id} className={`py-16 md:py-32 px-4 relative overflow-hidden ${className}`}>
+const Section = React.forwardRef<HTMLElement, { children: React.ReactNode; id: string; className?: string }>(({ children, id, className = '' }, ref) => (
+  <section ref={ref} id={id} className={`py-16 md:py-32 px-4 relative overflow-hidden ${className}`}>
     <div className="max-w-7xl mx-auto relative z-10">
       {children}
     </div>
   </section>
-);
+));
 
 interface HomeProps {
   startTypewriter?: boolean;
@@ -85,6 +46,220 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
+  // GSAP Ref
+  const aboutSectionRef = useRef<HTMLElement>(null);
+  const aboutContentRef = useRef<HTMLDivElement>(null);
+  const projectsRef = useRef<HTMLElement>(null);
+  const projectsGridRef = useRef<HTMLDivElement>(null);
+  const flipState = useRef<Flip.FlipState | null>(null);
+  const testimonialsRef = useRef<HTMLElement>(null);
+  const testimonialContentRef = useRef<HTMLDivElement>(null);
+  const contactRef = useRef<HTMLElement>(null);
+  const lastDirection = useRef<'next' | 'prev'>('next');
+
+  useLayoutEffect(() => {
+    gsap.registerPlugin(ScrollTrigger, Flip);
+    
+    const ctx = gsap.context(() => {
+      // 0. Section Entry (Slide Up)
+      gsap.fromTo(aboutContentRef.current, 
+        { y: 100, opacity: 0 },
+        { 
+          y: 0, 
+          opacity: 1, 
+          duration: 0.8, 
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: aboutSectionRef.current,
+            start: "top 85%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // 1. Animate Heading
+      gsap.from(".about-heading", {
+        y: 40,
+        opacity: 0,
+        duration: 0.6,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".about-heading",
+          start: "top 85%",
+          toggleActions: "play none none reverse"
+        }
+      });
+
+      // 2. Animate Description
+      gsap.from(".about-desc", {
+        y: 40,
+        opacity: 0,
+        duration: 0.6,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".about-desc",
+          start: "top 85%",
+          toggleActions: "play none none reverse"
+        }
+      });
+
+      // 3. Animate Buttons (CTA)
+      gsap.from(".about-buttons", {
+        y: 40,
+        opacity: 0,
+        duration: 0.6,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".about-buttons",
+          start: "top 85%",
+          toggleActions: "play none none reverse"
+        }
+      });
+
+      // 4. Animate Individual Stats Cards (staggered row-by-row)
+      gsap.from(".about-stat-card", {
+        y: 40,
+        opacity: 0,
+        duration: 0.6,
+        stagger: {
+          amount: 0.4,
+          grid: "auto",
+          from: "start"
+        },
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".about-stats-grid",
+          start: "top 85%",
+          toggleActions: "play none none reverse"
+        }
+      });
+    }, [aboutSectionRef]); // Scope only to about ref
+
+    return () => ctx.revert(); // Cleanup
+  }, []);
+
+  // --- PROJECTS SECTION GSAP ANIMATIONS ---
+  useLayoutEffect(() => {
+    if (isLoading) return; // Wait until projects are fetched and rendered in the DOM
+
+    const ctx = gsap.context(() => {
+      // 1. Animate Projects Heading
+      gsap.from(".projects-heading", {
+        y: 40,
+        opacity: 0,
+        duration: 0.6,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".projects-heading",
+          start: "top 85%",
+          toggleActions: "play none none reverse"
+        }
+      });
+
+      // 2. Animate Filter Buttons
+      gsap.from(".projects-filters", {
+        y: 40,
+        opacity: 0,
+        duration: 0.6,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".projects-filters",
+          start: "top 85%",
+          toggleActions: "play none none reverse"
+        }
+      });
+
+      // 3. Animate Individual Project Cards (staggered row-by-row)
+      gsap.from(".project-card-wrapper", {
+        y: 40,
+        opacity: 0,
+        duration: 0.6,
+        stagger: {
+          amount: 0.4,
+          grid: "auto",
+          from: "start"
+        },
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".projects-grid",
+          start: "top 85%",
+          toggleActions: "play none none reverse"
+        }
+      });
+    }, [projectsRef]); // Scope to projects ref
+
+    // We must refresh ScrollTrigger after DOM changes (like dynamic lists)
+    ScrollTrigger.refresh();
+
+    return () => ctx.revert(); // Cleanup when unmounted or re-rendered
+  }, [isLoading]); // Rerun this effect once loading finishes
+
+  // --- TESTIMONIALS SECTION GSAP ANIMATIONS ---
+  useLayoutEffect(() => {
+    if (isLoading || testimonials.length === 0) return;
+
+    const ctx = gsap.context(() => {
+      gsap.from(".testimonials-heading", {
+        y: 40,
+        opacity: 0,
+        duration: 0.6,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".testimonials-heading",
+          start: "top 85%",
+          toggleActions: "play none none reverse"
+        }
+      });
+
+      gsap.from(".testimonials-card-container", {
+        y: 40,
+        opacity: 0,
+        duration: 0.6,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".testimonials-card-container",
+          start: "top 85%",
+          toggleActions: "play none none reverse"
+        }
+      });
+    }, [testimonialsRef]);
+
+    ScrollTrigger.refresh();
+
+    return () => ctx.revert();
+  }, [isLoading, testimonials.length]);
+
+  // --- CONTACT SECTION GSAP ANIMATIONS ---
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(".contact-form-container", {
+        y: 40,
+        opacity: 0,
+        duration: 0.6,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".contact-form-container",
+          start: "top 85%",
+          toggleActions: "play none none reverse"
+        }
+      });
+
+      gsap.from(".contact-calendly-container", {
+        y: 40,
+        opacity: 0,
+        duration: 0.6,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".contact-calendly-container",
+          start: "top 85%",
+          toggleActions: "play none none reverse"
+        }
+      });
+    }, [contactRef]);
+
+    return () => ctx.revert();
+  }, []);
+
   useEffect(() => {
     const loadData = async () => {
       // Dynamic Import for Storage Service
@@ -105,9 +280,77 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
 
   const filteredProjects = useMemo(() => filter === 'All' ? projects : projects.filter(p => p.category === filter), [filter, projects]);
 
+  // --- FLIP ANIMATION LOGIC ---
+  const onFilterChange = (newFilter: string) => {
+    if (newFilter === filter) return;
+    
+    // 1. Capture State (Capture BOTH cards and their parent grid to prevent collapse)
+    const state = Flip.getState(".project-card, .projects-grid");
+    flipState.current = state;
+    
+    setFilter(newFilter);
+  };
+
+  useLayoutEffect(() => {
+    if (!flipState.current) return;
+
+    // 2. Animate from State
+    Flip.from(flipState.current, {
+      targets: ".project-card, .projects-grid", // Animate grid height alongside cards
+      duration: 0.6,
+      ease: "power2.inOut",
+      stagger: 0.05,
+      absolute: ".project-card", // ONLY make the cards absolute, keep grid in flow
+      onEnter: elements => {
+        // Only run fromTo on the actual cards entering, not the grid container
+        const cards = elements.filter(el => el.classList.contains('project-card'));
+        if(cards.length) {
+            return gsap.fromTo(cards, 
+              { opacity: 0, scale: 0.8 }, 
+              { opacity: 1, scale: 1, duration: 0.6 }
+            );
+        }
+      },
+      onLeave: elements => {
+        // Only run to on the actual cards leaving
+        const cards = elements.filter(el => el.classList.contains('project-card'));
+        if(cards.length) {
+            return gsap.to(cards, { opacity: 0, scale: 0.8, duration: 0.6 });
+        }
+      }
+    });
+
+    flipState.current = null;
+  }, [filteredProjects]);
+
   // --- TESTIMONIAL NAVIGATION ---
-  const nextTestimonial = () => setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-  const prevTestimonial = () => setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  const changeTestimonial = (direction: 'next' | 'prev') => {
+    lastDirection.current = direction;
+    gsap.to(testimonialContentRef.current, {
+      x: direction === 'next' ? -50 : 50,
+      opacity: 0,
+      duration: 0.3,
+      onComplete: () => {
+        if (direction === 'next') {
+          setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+        } else {
+          setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+        }
+      }
+    });
+  };
+
+  const nextTestimonial = () => changeTestimonial('next');
+  const prevTestimonial = () => changeTestimonial('prev');
+
+  useLayoutEffect(() => {
+    if (testimonials.length === 0 || isLoading) return;
+    
+    gsap.fromTo(testimonialContentRef.current, 
+      { x: lastDirection.current === 'next' ? 50 : -50, opacity: 0 }, 
+      { x: 0, opacity: 1, duration: 0.3 }
+    );
+  }, [currentTestimonial, isLoading, testimonials.length]);
 
   // --- AUTO-SCROLL LOGIC ---
   useEffect(() => {
@@ -193,12 +436,6 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
     }
   };
 
-  const testimonialCardVariants = {
-    initial: { opacity: 0, x: 50 },
-    animate: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: -50 }
-  };
-
   const scrollToProjects = () => {
     const element = document.getElementById('projects');
     if (element) {
@@ -210,8 +447,9 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
   };
 
   return (
-    <div className="min-h-[100dvh] bg-pastel-cream font-sans text-pastel-charcoal selection:bg-pastel-lavender overflow-x-hidden transition-colors duration-500">
+    <>
       <Navbar />
+      <div className="min-h-[100dvh] bg-pastel-cream font-sans text-pastel-charcoal selection:bg-pastel-lavender overflow-x-hidden transition-colors duration-500">
 
       {/* --- HERO SECTION --- */}
       <div className="relative w-full min-h-[100dvh] pt-[84px] border-b-4 border-pastel-charcoal bg-pastel-blue/10 transition-colors duration-500 overflow-hidden flex flex-col justify-center">
@@ -221,75 +459,71 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
           <ParticleBackground />
           {theme === 'night' && <PixelStars />}
           
-          <m.div 
-             animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.5, 0.2] }}
-             transition={{ duration: 4, repeat: Infinity }}
-             className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-white opacity-40 rounded-full blur-3xl" 
+          <div 
+             className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-white opacity-40 rounded-full blur-3xl animate-[pulse_4s_ease-in-out_infinite]" 
           />
 
           <div className="absolute top-24 right-4 md:right-8 lg:right-12 z-10">
-            <AnimatePresence mode="wait">
                {theme === 'day' ? (
                   <PixelSun key="sun" className="origin-center scale-75 md:scale-100" />
                ) : (
                   <PixelMoon key="moon" className="origin-center scale-75 md:scale-100" />
                )}
-            </AnimatePresence>
           </div>
 
           <div className="absolute top-[84px] left-0 w-full h-[50vh]">
-             <PixelCloud top="10%" className="opacity-80 scale-75 md:scale-100" size="w-24 md:w-48" duration={60} delay={0} />
-             <PixelCloud top="40%" className="opacity-60 scale-75 md:scale-100" size="w-16 md:w-32" duration={45} delay={20} />
-             <PixelCloud top="70%" className="opacity-40 scale-75 md:scale-100" size="w-32 md:w-56" duration={70} delay={10} />
+             {/* Static Clouds */}
+             <PixelCloud isStatic top={100} right="10%" size="w-20 md:w-32" className="opacity-90 z-20" />
+             <PixelCloud isStatic top="15%" left="15%" size="w-16 md:w-24" className="opacity-70" />
+
+             {/* Moving Clouds */}
+             <PixelCloud top="10%" className="opacity-80 scale-75 md:scale-100" size="w-24 md:w-48" duration={30} delay={0} />
+             <PixelCloud top="40%" className="opacity-60 scale-75 md:scale-100" size="w-16 md:w-32" duration={22} delay={20} />
+             <PixelCloud top="70%" className="opacity-40 scale-75 md:scale-100" size="w-32 md:w-56" duration={35} delay={10} />
           </div>
         </div>
 
         {/* === LAYER 1: MAIN CONTENT === */}
-        <div className="relative z-10 w-full px-3 md:px-6 lg:px-8 flex flex-col justify-end md:justify-center py-12 md:py-0 h-full flex-grow">
-           <div className="flex flex-col items-start text-left z-20 max-w-5xl">
-              <h1 className="font-pixel text-5xl sm:text-6xl md:text-7xl lg:text-8xl mb-6 leading-tight cursor-default drop-shadow-sm">
-                Hi, I'm <br className="hidden md:block" />
-                <span className="bg-pastel-blue text-black px-4 py-2 shadow-pixel inline-block transform hover:scale-105 transition-transform mt-2">Raza A.</span>
-              </h1>
-              
-              <div className="font-mono text-base sm:text-lg md:text-xl mb-8 min-h-[80px] border-l-4 border-pastel-blue pl-6 py-2 bg-transparent rounded-r-lg text-left w-full max-w-2xl flex items-center">
-                <Typewriter 
-                  text="I help small and medium sized businesses establish a strong online presence digitally." 
-                  delay={25} 
-                  start={startTypewriter}
-                />
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                <PixelButton onClick={scrollToProjects} size="lg" className="w-full sm:w-auto shadow-pixel-lg">View Projects</PixelButton>
-                <PixelButton onClick={() => window.open('https://calendly.com/alibuildswebsites/30min', '_blank', 'noopener,noreferrer')} variant="secondary" size="lg" className="w-full sm:w-auto shadow-pixel-lg">Start Project</PixelButton>
-              </div>
+        <div className="relative z-10 w-full h-full flex flex-col justify-end md:justify-center px-4 md:px-8 lg:px-12 max-w-5xl flex-grow pb-12 md:pb-0">
+           
+           <h1 className="font-pixel text-5xl sm:text-6xl md:text-7xl lg:text-8xl mb-8 md:mb-6 leading-tight cursor-default drop-shadow-sm mt-32 md:mt-0">
+             Hi, I'm <br className="hidden md:block" />
+             <span className="bg-pastel-blue text-black px-4 py-2 shadow-pixel inline-block transform hover:scale-105 transition-transform mt-2">Raza A.</span>
+           </h1>
+           
+           <div className="font-mono text-base sm:text-lg md:text-xl mb-12 min-h-[80px] border-l-4 border-pastel-blue pl-6 py-2 bg-transparent rounded-r-lg text-left w-full max-w-2xl flex items-center">
+             <Typewriter 
+               text="I help small and medium sized businesses establish a strong online presence digitally." 
+               delay={25} 
+               start={startTypewriter}
+             />
            </div>
+              
+           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+              <PixelButton onClick={scrollToProjects} size="lg" className="w-full sm:w-auto shadow-pixel-lg">View Projects</PixelButton>
+              <PixelButton onClick={() => window.open('https://calendly.com/alibuildswebsites/30min', '_blank', 'noopener,noreferrer')} variant="secondary" size="lg" className="w-full sm:w-auto shadow-pixel-lg">Start Project</PixelButton>
+           </div>
+           
         </div>
       </div>
 
       {/* --- ABOUT ME --- */}
-      <Section id="about" className="bg-pastel-surface/90 backdrop-blur-sm transition-colors duration-500">
-        <m.div 
-          className="flex flex-col items-center max-w-4xl mx-auto"
-          variants={sectionStagger}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "50px" }}
+      <Section ref={aboutSectionRef} id="about" className="bg-pastel-surface/90 backdrop-blur-sm transition-colors duration-500">
+        <div 
+          ref={aboutContentRef}
+          className="flex flex-col items-center max-w-4xl mx-auto opacity-0"
         >
           {/* 1. Heading */}
-          <m.h2 
-            variants={fadeInUp}
-            className="font-pixel text-3xl sm:text-4xl mb-6 inline-flex items-center gap-3 text-center"
+          <h2 
+            className="about-heading font-pixel text-3xl sm:text-4xl mb-6 inline-flex items-center gap-3 text-center"
           >
             <span className="w-3 h-8 sm:h-10 bg-pastel-peach border-2 border-pastel-charcoal"></span>
             About Me
-          </m.h2>
+          </h2>
 
           {/* 2. Description */}
-          <m.div
-            variants={fadeInUp}
-            className="text-center mb-12"
+          <div
+            className="about-desc text-center mb-12"
           >
             <div className="prose prose-lg text-pastel-charcoal space-y-4 font-medium text-base sm:text-lg max-w-2xl mx-auto">
               <p>Hi, nice to see you here. I'm Raza A.</p>
@@ -297,10 +531,10 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
               <p>I'm currently pursuing my career in data science, and creating digital experiences that blend clean, intuitive design with smart development.</p>
               <p className="font-bold">Let's chat about building solutions that sets you apart.</p>
             </div>
-          </m.div>
+          </div>
             
           {/* 3. Buttons (Links) */}
-          <m.div variants={fadeInUp} className="mt-0 mb-12 flex justify-center gap-4">
+          <div className="about-buttons mt-0 mb-12 flex justify-center gap-4">
               <a 
                 href="https://linkedin.com/in/alibuildswebsites" 
                 target="_blank" 
@@ -321,12 +555,11 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
               >
                 <Mail size={20} /> Email Me
               </a>
-          </m.div>
+          </div>
 
           {/* 4. Stats Grid */}
-          <m.div 
-            variants={gridStagger}
-            className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full"
+          <div 
+            className="about-stats-grid grid grid-cols-2 md:grid-cols-4 gap-4 w-full"
           >
             {[
               { label: 'Years Exp', value: '5+', icon: <Briefcase /> },
@@ -334,50 +567,47 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
               { label: 'Satisfaction', value: '100%', icon: <Star /> },
               { label: 'Availability', value: 'Project', icon: <Briefcase /> }
             ].map((stat, idx) => (
-              <m.div 
+              <div 
                 key={idx} 
-                variants={fadeInUp} // Each card uses standard fade up
                 onMouseEnter={playHover}
-                className="bg-pastel-cream border-2 border-pastel-charcoal p-3 sm:p-6 shadow-pixel hover:translate-y-[-4px] transition-transform text-left"
+                className="about-stat-card bg-pastel-cream border-2 border-pastel-charcoal p-3 sm:p-6 shadow-pixel hover:translate-y-[-4px] transition-transform text-left"
               >
                 <div className="mb-2 text-pastel-blue scale-75 sm:scale-100 origin-left">{stat.icon}</div>
                 <div className="font-pixel text-2xl sm:text-3xl md:text-4xl mb-1 text-pastel-charcoal">{stat.value}</div>
                 <div className="text-[10px] sm:text-sm font-bold uppercase tracking-widest text-pastel-charcoal">{stat.label}</div>
-              </m.div>
+              </div>
             ))}
-          </m.div>
-        </m.div>
+          </div>
+        </div>
       </Section>
 
       {/* --- PROJECTS --- */}
       <Section id="projects" className="bg-pastel-surface border-t-4 border-pastel-charcoal transition-colors duration-500">
-        <m.div 
+        <div 
+           ref={projectsRef as React.RefObject<HTMLDivElement>}
            className="max-w-7xl mx-auto relative z-10 px-4 md:px-8"
-           variants={sectionStagger}
-           initial="hidden"
-           whileInView="visible"
-           viewport={{ once: true, margin: "100px" }}
         >
           {/* 1. Header Text */}
-          <m.div 
-            variants={fadeInUp}
-            className="flex flex-col justify-center items-center mb-8 gap-6 text-center"
+          <div 
+            className="projects-heading flex flex-col justify-center items-center mb-8 gap-6 text-center"
           >
             <div className="w-full">
               <h2 className="font-pixel text-3xl sm:text-4xl mb-2 sm:mb-4">My Projects</h2>
               <p className="text-base sm:text-lg max-w-2xl mx-auto">Selected works demonstrating value and functionality.</p>
             </div>
-          </m.div>
+          </div>
             
           {/* 2. Filter Buttons */}
-          <m.div 
-            variants={fadeInUp}
-            className="flex flex-wrap justify-center gap-3 w-full mb-12"
+          <div 
+            className="projects-filters flex flex-wrap justify-center gap-3 w-full mb-12"
           >
             {categories.map((name) => (
               <button 
                 key={name}
-                onClick={() => { setFilter(name); playClick(); }}
+                onClick={() => { 
+                  onFilterChange(name);
+                  playClick(); 
+                }}
                 onMouseEnter={playHover}
                 className={`
                   font-pixel text-lg px-4 py-2 border-2 border-pastel-charcoal transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-pastel-charcoal focus-visible:ring-offset-2
@@ -390,25 +620,20 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                 {name}
               </button>
             ))}
-          </m.div>
+          </div>
 
           {/* 3. Project Grid */}
           {!isLoading ? (
-            <m.div 
-                variants={gridStagger}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12 min-h-[200px]"
+            <div 
+                ref={projectsGridRef}
+                className="projects-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12 min-h-[200px]"
             >
-                <AnimatePresence mode="popLayout">
                   {filteredProjects.map((project) => (
-                    <m.div
-                      key={project.id}
-                      layout // Layout prop kept here for filtering transitions
-                      variants={fadeInUp} // Cards staggered by gridStagger
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      whileHover={{ scale: 1.02, y: -5, zIndex: 10 }}
-                      onMouseEnter={playHover}
-                      className="group bg-pastel-surface border-2 border-pastel-charcoal shadow-pixel flex flex-col h-full hover:shadow-pixel-lg transition-shadow duration-300 relative"
-                    >
+                    <div key={project.id} className="project-card-wrapper h-full">
+                      <div
+                        className="project-card group bg-pastel-surface border-2 border-pastel-charcoal shadow-pixel flex flex-col h-full hover:shadow-pixel-lg transition-all duration-300 relative hover:-translate-y-1 hover:z-10"
+                        onMouseEnter={playHover}
+                      >
                        {/* --- FLOATING ICON BADGE --- */}
                        <div className="absolute -top-4 -right-4 w-12 h-12 bg-pastel-blue border-2 border-pastel-charcoal flex items-center justify-center shadow-pixel z-20 transform rotate-0 group-hover:rotate-[9deg] transition-transform duration-300">
                           <Code size={24} className="text-black" />
@@ -469,49 +694,42 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                           )}
                         </div>
                       </div>
-                    </m.div>
+                    </div>
+                    </div>
                   ))}
-                </AnimatePresence>
                 
                 {filteredProjects.length === 0 && (
-                   <m.div 
-                     variants={fadeInUp}
+                   <div 
                      className="w-full col-span-1 md:col-span-2 lg:col-span-3 flex flex-col items-center justify-center py-20 opacity-50 bg-gray-50 border-2 border-dashed border-gray-300"
                    >
                       <div className="w-16 h-16 bg-gray-200 border-2 border-gray-400 mb-4 flex items-center justify-center">
                         <Code className="text-gray-400" />
                       </div>
                       <p className="font-pixel text-xl text-black">Projects coming soon.</p>
-                   </m.div>
+                   </div>
                 )}
-            </m.div>
+            </div>
           ) : (
             <div className="h-[200px] flex items-center justify-center">
               <span className="font-pixel text-xl animate-pulse text-pastel-charcoal">Loading projects...</span>
             </div>
           )}
-        </m.div>
+        </div>
       </Section>
 
       {/* --- TESTIMONIALS --- */}
-      <Section id="testimonials" className="bg-pastel-lavender/30 border-y-4 border-pastel-charcoal relative transition-colors duration-500">
-        <PixelCloud top="5%" size="w-24 md:w-32" duration={50} delay={0} className="opacity-50" />
-        <PixelCloud top="80%" size="w-32 md:w-48" duration={60} delay={10} className="opacity-50" />
+      <Section ref={testimonialsRef} id="testimonials" className="bg-pastel-lavender/30 border-y-4 border-pastel-charcoal relative transition-colors duration-500">
+        <PixelCloud top="5%" size="w-24 md:w-32" duration={25} delay={0} className="opacity-50" />
+        <PixelCloud top="80%" size="w-32 md:w-48" duration={30} delay={10} className="opacity-50" />
         
-        <m.div
-           className="max-w-4xl mx-auto relative z-10 px-0 sm:px-4"
-           variants={sectionStagger}
-           initial="hidden"
-           whileInView="visible"
-           viewport={{ once: true, margin: "100px" }}
-        >
+        <div className="max-w-4xl mx-auto relative z-10 px-0 sm:px-4">
           {/* 1. Heading */}
-          <m.h2 variants={fadeInUp} className="font-pixel text-3xl sm:text-4xl text-center mb-8 md:mb-16 relative z-10">
+          <h2 className="testimonials-heading font-pixel text-3xl sm:text-4xl text-center mb-8 md:mb-16 relative z-10">
             What Clients Say
-          </m.h2>
+          </h2>
           
           {/* 2. Testimonial Card */}
-          <m.div variants={fadeInUp}>
+          <div className="testimonials-card-container">
             {testimonials.length > 0 ? (
               <div 
                 className="bg-pastel-surface border-2 border-pastel-charcoal p-6 md:p-12 shadow-pixel-lg relative mx-2 sm:mx-0 group cursor-pointer"
@@ -522,53 +740,39 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                   <Star className="fill-black text-black" />
                 </div>
                 
-                <m.div 
-                  className="overflow-hidden"
-                  animate={{ height: "auto" }}
-                  transition={{ duration: 0.5, ease: "easeInOut" }}
-                >
-                  <AnimatePresence mode='wait'>
-                    <m.div
-                      key={currentTestimonial}
-                      variants={testimonialCardVariants}
-                      initial="initial"
-                      animate="animate"
-                      exit="exit"
-                      transition={{ duration: 0.5, ease: "easeInOut" }}
-                      className="relative z-10"
-                    >
-                      <div className="flex gap-1 mb-4 md:mb-6 pt-6">
-                          {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
-                            <Star key={i} size={20} className="fill-pastel-mint text-pastel-charcoal" />
-                          ))}
+                <div className="overflow-hidden">
+                  <div ref={testimonialContentRef} className="relative z-10">
+                    <div className="flex gap-1 mb-4 md:mb-6 pt-6">
+                        {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
+                          <Star key={i} size={20} className="fill-pastel-mint text-pastel-charcoal" />
+                        ))}
+                    </div>
+                    <p className="font-pixel text-xl sm:text-2xl md:text-3xl leading-relaxed mb-6 md:mb-8 text-pastel-charcoal">
+                      "{testimonials[currentTestimonial].text}"
+                    </p>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 border-t-2 border-pastel-gray pt-6">
+                      <div className="w-10 h-10 md:w-12 md:h-12 bg-pastel-blue rounded-full border-2 border-pastel-charcoal overflow-hidden flex-shrink-0">
+                        <img 
+                            src={`https://api.dicebear.com/7.x/pixel-art/svg?seed=${testimonials[currentTestimonial].avatarSeed || testimonials[currentTestimonial].id}`} 
+                            alt="client" 
+                            width="48"
+                            height="48"
+                            className="w-full h-full object-cover"
+                          />
                       </div>
-                      <p className="font-pixel text-xl sm:text-2xl md:text-3xl leading-relaxed mb-6 md:mb-8 text-pastel-charcoal">
-                        "{testimonials[currentTestimonial].text}"
-                      </p>
-                      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 border-t-2 border-pastel-gray pt-6">
-                        <div className="w-10 h-10 md:w-12 md:h-12 bg-pastel-blue rounded-full border-2 border-pastel-charcoal overflow-hidden flex-shrink-0">
-                          <img 
-                              src={`https://api.dicebear.com/7.x/pixel-art/svg?seed=${testimonials[currentTestimonial].avatarSeed || testimonials[currentTestimonial].id}`} 
-                              alt="client" 
-                              width="48"
-                              height="48"
-                              className="w-full h-full object-cover"
-                            />
-                        </div>
-                        <div>
-                            <div className="font-pixel text-lg sm:text-xl font-bold text-pastel-charcoal">
-                                {testimonials[currentTestimonial].clientName || 'Anonymous'}
-                            </div>
-                            {testimonials[currentTestimonial].companyName && (
-                                <div className="font-sans text-sm text-pastel-charcoal/70">
-                                    {testimonials[currentTestimonial].companyName}
-                                </div>
-                            )}
-                        </div>
+                      <div>
+                          <div className="font-pixel text-lg sm:text-xl font-bold text-pastel-charcoal">
+                              {testimonials[currentTestimonial].clientName || 'Anonymous'}
+                          </div>
+                          {testimonials[currentTestimonial].companyName && (
+                              <div className="font-sans text-sm text-pastel-charcoal/70">
+                                  {testimonials[currentTestimonial].companyName}
+                              </div>
+                          )}
                       </div>
-                    </m.div>
-                  </AnimatePresence>
-                </m.div>
+                    </div>
+                  </div>
+                </div>
 
                 {testimonials.length > 1 && (
                   <div className="absolute bottom-4 right-4 flex gap-2 z-20">
@@ -592,21 +796,15 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
             ) : (
               <div className="text-center font-pixel text-xl">Testimonials coming soon!</div>
             )}
-          </m.div>
-        </m.div>
+          </div>
+        </div>
       </Section>
 
       {/* --- CONTACT --- */}
-      <Section id="contact" className="bg-pastel-surface mb-12 md:mb-20 transition-colors duration-500">
-        <m.div 
-           className="max-w-3xl mx-auto flex flex-col gap-16"
-           variants={sectionStagger}
-           initial="hidden"
-           whileInView="visible"
-           viewport={{ once: true, margin: "100px" }}
-        >
+      <Section ref={contactRef} id="contact" className="bg-pastel-surface mb-12 md:mb-20 transition-colors duration-500">
+        <div className="max-w-3xl mx-auto flex flex-col gap-16">
           {/* 1. Header & Form */}
-          <m.div variants={fadeInUp} className="w-full">
+          <div className="w-full contact-form-container">
             <div className="text-center mb-8">
               <h2 className="font-pixel text-3xl sm:text-4xl mb-4 text-pastel-charcoal">Let's Build Something Great</h2>
               <p className="mb-0 text-base sm:text-lg text-pastel-charcoal">Have a project in mind? I'm available for freelance work. Send me the details!</p>
@@ -665,23 +863,21 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
               </div>
               <div className="relative z-10" aria-live="polite">
                 {formStatus === 'success' ? (
-                   <m.div 
-                      initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-                      className="bg-pastel-mint border-2 border-pastel-charcoal p-4 text-center font-bold flex flex-col items-center justify-center gap-2 shadow-pixel w-full py-6 text-black"
+                   <div 
+                      className="animate-fade-in bg-pastel-mint border-2 border-pastel-charcoal p-4 text-center font-bold flex flex-col items-center justify-center gap-2 shadow-pixel w-full py-6 text-black"
                       role="alert"
                     >
                       <span className="text-3xl bg-white rounded-full w-12 h-12 flex items-center justify-center border-2 border-pastel-charcoal">✓</span> 
                       <span className="text-lg">Message Sent Successfully!</span>
                       <span className="text-sm font-normal">I'll get back to you within 24 hours.</span>
-                    </m.div>
+                    </div>
                 ) : formStatus === 'error' ? (
-                    <m.div 
-                      initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-                      className="bg-red-200 border-2 border-pastel-charcoal p-4 text-center font-bold shadow-pixel w-full text-black"
+                    <div 
+                      className="animate-fade-in bg-red-200 border-2 border-pastel-charcoal p-4 text-center font-bold shadow-pixel w-full text-black"
                       role="alert"
                     >
                       <span className="text-xl mr-2">⚠</span> {errorMessage || "Something went wrong. Please try again."}
-                    </m.div>
+                    </div>
                 ) : (
                     <PixelButton type="submit" size="lg" className="w-full" isLoading={formStatus === 'submitting'}>
                       Send Message
@@ -689,10 +885,10 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                 )}
               </div>
             </form>
-          </m.div>
+          </div>
           
           {/* 2. Calendly Section */}
-          <m.div variants={fadeInUp} className="w-full flex flex-col items-center">
+          <div className="w-full flex flex-col items-center contact-calendly-container">
              <div className="text-center mb-6">
                 <h3 className="font-pixel text-2xl text-pastel-charcoal">Or Schedule a Free 30-Minute Consultation</h3>
              </div>
@@ -706,12 +902,13 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                    loading="lazy"
                  ></iframe>
              </div>
-          </m.div>
-        </m.div>
+          </div>
+        </div>
       </Section>
 
       <Footer />
     </div>
+    </>
   );
 };
 

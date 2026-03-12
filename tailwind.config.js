@@ -38,6 +38,10 @@ export default {
         'pixel-sm': '2px 2px 0px 0px var(--shadow-color)',
         'pixel-lg': '6px 6px 0px 0px var(--shadow-color)',
         'pixel-press': '1px 1px 0px 0px var(--shadow-color)',
+      },
+      animation: {
+        'cloud-drift': 'cloud-drift linear infinite both',
+        'star-twinkle': 'star-twinkle 3s ease-in-out infinite',
       }
     },
   },
