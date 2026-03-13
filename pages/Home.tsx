@@ -486,7 +486,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
         {/* === LAYER 1: MAIN CONTENT === */}
         <div className="relative z-10 w-full h-full flex flex-col justify-end md:justify-center px-4 md:px-8 lg:px-12 max-w-5xl flex-grow pb-12 md:pb-0">
            
-           <h1 className="font-pixel text-5xl sm:text-6xl md:text-7xl lg:text-8xl mb-8 md:mb-6 leading-tight cursor-default drop-shadow-sm mt-32 md:mt-0">
+           <h1 className="font-pixel text-5xl sm:text-6xl md:text-7xl lg:text-8xl mb-8 md:mb-6 leading-tight cursor-default drop-shadow-sm mt-[20vh] md:mt-0">
              Hi, I'm <br className="hidden md:block" />
              <span className="bg-pastel-blue text-black px-4 py-2 shadow-pixel inline-block transform hover:scale-105 transition-transform mt-2">Raza A.</span>
            </h1>
@@ -559,7 +559,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
 
           {/* 4. Stats Grid */}
           <div 
-            className="about-stats-grid grid grid-cols-2 md:grid-cols-4 gap-4 w-full"
+            className="about-stats-grid grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-4 w-full"
           >
             {[
               { label: 'Years Exp', value: '5+', icon: <Briefcase /> },
@@ -802,9 +802,9 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
 
       {/* --- CONTACT --- */}
       <Section ref={contactRef} id="contact" className="bg-pastel-surface mb-12 md:mb-20 transition-colors duration-500">
-        <div className="max-w-3xl mx-auto flex flex-col gap-16">
+        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
           {/* 1. Header & Form */}
-          <div className="w-full contact-form-container">
+          <div className="w-full lg:w-1/2 contact-form-container">
             <div className="text-center mb-8">
               <h2 className="font-pixel text-3xl sm:text-4xl mb-4 text-pastel-charcoal">Let's Build Something Great</h2>
               <p className="mb-0 text-base sm:text-lg text-pastel-charcoal">Have a project in mind? I'm available for freelance work. Send me the details!</p>
@@ -888,7 +888,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
           </div>
           
           {/* 2. Calendly Section */}
-          <div className="w-full flex flex-col items-center contact-calendly-container">
+          <div className="w-full lg:w-1/2 flex flex-col items-center contact-calendly-container sticky top-24">
              <div className="text-center mb-6">
                 <h3 className="font-pixel text-2xl text-pastel-charcoal">Or Schedule a Free 30-Minute Consultation</h3>
              </div>
