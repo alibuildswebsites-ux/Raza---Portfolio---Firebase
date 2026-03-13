@@ -6,7 +6,7 @@ export interface Project {
   technologies: string[];
   demoUrl: string;
   githubUrl?: string;
-  category: 'Web Development' | 'UI Design' | 'Mobile App' | 'Data Science';
+  category: 'Completed' | 'Ongoing' | 'Upcoming';
   isVisible: boolean;
   updatedAt?: string;
 }

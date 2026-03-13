@@ -41,7 +41,7 @@ const Projects: React.FC = () => {
       description: currentProject.description || '',
       technologies,
       isVisible: currentProject.isVisible !== false,
-      category: currentProject.category || 'Web Development',
+      category: currentProject.category || 'Completed',
       demoUrl: currentProject.demoUrl || '',
       githubUrl: currentProject.githubUrl || ''
     };
@@ -79,7 +79,7 @@ const Projects: React.FC = () => {
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <h2 className="font-pixel text-2xl sm:text-3xl text-pastel-charcoal">Manage Projects</h2>
-        <PixelButton onClick={() => { setCurrentProject({ isVisible: true, category: 'Web Development' }); setIsEditing(true); }} className="w-full sm:w-auto">
+        <PixelButton onClick={() => { setCurrentProject({ isVisible: true, category: 'Completed' }); setIsEditing(true); }} className="w-full sm:w-auto">
           <Plus size={18} className="inline mr-2" /> Add Project
         </PixelButton>
       </div>
@@ -129,13 +129,12 @@ const Projects: React.FC = () => {
                   <label className="block font-bold mb-1 text-pastel-charcoal text-sm">Category</label>
                   <select 
                      className="w-full border-2 border-pastel-charcoal bg-pastel-cream text-pastel-charcoal p-2 focus:border-pastel-blue outline-none text-sm sm:text-base"
-                     value={currentProject.category || 'Web Development'}
+                     value={currentProject.category || 'Completed'}
                      onChange={e => setCurrentProject({...currentProject, category: e.target.value as any})}
                   >
-                     <option>Web Development</option>
-                     <option>UI Design</option>
-                     <option>Mobile App</option>
-                     <option>Data Science</option>
+                     <option>Completed</option>
+                     <option>Ongoing</option>
+                     <option>Upcoming</option>
                   </select>
                </div>
                <div>
