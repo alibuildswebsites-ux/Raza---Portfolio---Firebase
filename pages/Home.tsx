@@ -900,6 +900,7 @@ const Home: React.FC<HomeProps> = ({ startTypewriter = true }) => {
                    frameBorder="0"
                    title="Schedule a consultation"
                    loading="lazy"
+                   sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
                  ></iframe>
              </div>
           </div>
