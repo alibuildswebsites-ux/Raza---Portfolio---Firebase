@@ -34,13 +34,11 @@ const TestimonialsSection = () => {
   }, []);
 
   const nextTestimonial = () => {
-    playClick();
     lastDirection.current = 'next';
     setCurrentTestimonial(prev => (prev + 1) % testimonials.length);
   };
 
   const prevTestimonial = () => {
-    playClick();
     lastDirection.current = 'prev';
     setCurrentTestimonial(prev => (prev - 1 + testimonials.length) % testimonials.length);
   };
