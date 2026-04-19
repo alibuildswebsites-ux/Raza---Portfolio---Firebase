@@ -1,5 +1,5 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import ScrollToTop from './components/ui/ScrollToTop';
 import Preloader from './components/ui/Preloader';
 import { ThemeProvider } from './context/ThemeContext';
@@ -142,7 +142,7 @@ const App: React.FC = () => {
     <LazyLoadErrorBoundary>
       <ThemeProvider>
         <AudioProvider>
-          <HashRouter>
+          <BrowserRouter>
             <ScrollToTop />
             {loading && <Preloader onComplete={() => setLoading(false)} />}
 
@@ -215,7 +215,7 @@ const App: React.FC = () => {
 
               <Route path="*" element={<Suspense fallback={<LoginSkeleton />}><NotFound /></Suspense>} />
             </Routes>
-          </HashRouter>
+          </BrowserRouter>
         </AudioProvider>
       </ThemeProvider>
     </LazyLoadErrorBoundary>
