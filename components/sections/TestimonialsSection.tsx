@@ -84,97 +84,91 @@ const TestimonialsSection = () => {
   }, [testimonials.length, isTestimonialPaused]);
 
   return (
-    <Section ref={testimonialsRef} id="testimonials" className="bg-pastel-lavender/30 border-y-4 border-pastel-charcoal relative transition-colors duration-500">
-      <PixelCloud top="5%" size="w-24 md:w-32" duration={25} delay={0} className="opacity-50" />
-      <PixelCloud top="80%" size="w-32 md:w-48" duration={30} delay={10} className="opacity-50" />
-      
-      <div className="max-w-4xl mx-auto relative z-10 px-0 sm:px-4">
-        <div className="testimonials-heading flex flex-col items-center justify-center mb-10 sm:mb-16 text-center px-4">
-          <h2 className="font-pixel text-3xl sm:text-4xl mb-2 sm:mb-4 text-pastel-charcoal">Client Feedback</h2>
-          <p className="text-base sm:text-lg max-w-2xl mx-auto">What others say about working together.</p>
-        </div>
+    <>
+
+      {/* --- TESTIMONIALS --- */}
+      <Section ref={testimonialsRef} id="testimonials" className="bg-pastel-lavender/30 border-y-4 border-pastel-charcoal relative transition-colors duration-500">
+        <PixelCloud top="5%" size="w-24 md:w-32" duration={25} delay={0} className="opacity-50" />
+        <PixelCloud top="80%" size="w-32 md:w-48" duration={30} delay={10} className="opacity-50" />
         
-        <div className="testimonials-card-container px-2 sm:px-0">
-          {isLoading ? (
-            <div className="flex justify-center py-20">
-              <div className="h-12 w-12 bg-pastel-pink animate-pulse mb-6 border-2 border-pastel-charcoal shadow-pixel"></div>
-            </div>
-          ) : testimonials.length > 0 ? (
-            <div 
-              className="bg-pastel-cream border-2 border-pastel-charcoal shadow-pixel p-6 sm:p-8 md:p-12 relative transition-all duration-300 min-h-[300px] flex flex-col justify-center"
-              onMouseEnter={() => setIsTestimonialPaused(true)}
-              onMouseLeave={() => setIsTestimonialPaused(false)}
-            >
+        <div className="max-w-4xl mx-auto relative z-10 px-0 sm:px-4">
+          {/* 1. Heading */}
+          <h2 className="testimonials-heading font-pixel text-3xl sm:text-4xl text-center mb-8 md:mb-16 relative z-10">
+            What Clients Say
+          </h2>
+          
+          {/* 2. Testimonial Card */}
+          <div className="testimonials-card-container">
+            {testimonials.length > 0 ? (
               <div 
-                ref={testimonialContentRef} 
-                className="flex flex-col items-center text-center relative z-10"
+                className="bg-pastel-surface border-2 border-pastel-charcoal p-6 md:p-12 shadow-pixel-lg relative mx-2 sm:mx-0 group cursor-pointer"
+                onMouseEnter={() => setIsTestimonialPaused(true)}
+                onMouseLeave={() => setIsTestimonialPaused(false)}
               >
-                <div className="mb-6 flex gap-1 bg-pastel-surface border-2 border-pastel-charcoal p-2 shadow-pixel-sm transition-colors duration-500">
-                  {[...Array(5)].map((_, i) => (
-                    <Star 
-                      key={i} 
-                      size={20} 
-                      fill={i < testimonials[currentTestimonial].rating ? "currentColor" : "none"} 
-                      className={`transition-colors duration-300 ${i < testimonials[currentTestimonial].rating ? "text-pastel-yellow" : "text-pastel-gray/40"}`} 
-                    />
-                  ))}
+                <div className="absolute -top-6 left-4 md:left-8 bg-pastel-peach border-2 border-pastel-charcoal p-2 shadow-pixel z-20">
+                  <Star className="fill-black text-black" />
                 </div>
                 
-                <p className="text-lg sm:text-xl md:text-2xl font-bold leading-relaxed mb-8 sm:mb-12 italic opacity-90 text-pastel-charcoal">
-                  "{testimonials[currentTestimonial].text}"
-                </p>
-                
-                <div className="mt-auto pt-6 border-t-2 border-pastel-charcoal w-full transition-colors duration-500">
-                  <div className="flex items-center justify-center gap-4">
-                    <img 
-                      src={`https://api.dicebear.com/7.x/pixel-art/svg?seed=${testimonials[currentTestimonial].avatarSeed || testimonials[currentTestimonial].id}`} 
-                      alt={testimonials[currentTestimonial].clientName || 'Client Avatar'} 
-                      className="w-12 h-12 sm:w-16 sm:h-16 rounded-full border-2 border-pastel-charcoal bg-white shadow-pixel-sm"
-                      loading="lazy"
-                    />
-                    <div className="text-left">
-                      <h4 className="font-pixel text-lg sm:text-xl text-pastel-charcoal">
-                        {testimonials[currentTestimonial].clientName || 'Anonymous Client'}
-                      </h4>
-                      {testimonials[currentTestimonial].companyName && (
-                        <p className="text-sm font-bold opacity-70 mt-1 uppercase text-pastel-charcoal">
-                          {testimonials[currentTestimonial].companyName}
-                        </p>
-                      )}
+                <div className="overflow-hidden">
+                  <div ref={testimonialContentRef} className="relative z-10">
+                    <div className="flex gap-1 mb-4 md:mb-6 pt-6">
+                        {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
+                          <Star key={i} size={20} className="fill-pastel-mint text-pastel-charcoal" />
+                        ))}
+                    </div>
+                    <p className="font-pixel text-xl sm:text-2xl md:text-3xl leading-relaxed mb-6 md:mb-8 text-pastel-charcoal">
+                      "{testimonials[currentTestimonial].text}"
+                    </p>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 border-t-2 border-pastel-gray pt-6">
+                      <div className="w-10 h-10 md:w-12 md:h-12 bg-pastel-blue rounded-full border-2 border-pastel-charcoal overflow-hidden flex-shrink-0">
+                        <img 
+                            src={`https://api.dicebear.com/7.x/pixel-art/svg?seed=${testimonials[currentTestimonial].avatarSeed || testimonials[currentTestimonial].id}`} 
+                            alt="client" 
+                            width="48"
+                            height="48"
+                            className="w-full h-full object-cover"
+                          />
+                      </div>
+                      <div>
+                          <div className="font-pixel text-lg sm:text-xl font-bold text-pastel-charcoal">
+                              {testimonials[currentTestimonial].clientName || 'Anonymous'}
+                          </div>
+                          {testimonials[currentTestimonial].companyName && (
+                              <div className="font-sans text-sm text-pastel-charcoal/70">
+                                  {testimonials[currentTestimonial].companyName}
+                              </div>
+                          )}
+                      </div>
                     </div>
                   </div>
                 </div>
+
+                {testimonials.length > 1 && (
+                  <div className="absolute bottom-4 right-4 flex gap-2 z-20">
+                    <button 
+                      onClick={() => { prevTestimonial(); playClick(); }}
+                      onMouseEnter={playHover}
+                      className="touch-target p-2 border-2 border-pastel-charcoal hover:bg-pastel-blue transition-colors bg-pastel-surface shadow-pixel-sm active:translate-y-1 text-pastel-charcoal focus:outline-none focus:ring-2 focus:ring-pastel-charcoal focus:ring-offset-2"
+                    >
+                      <ArrowLeft size={20} />
+                    </button>
+                    <button 
+                      onClick={() => { nextTestimonial(); playClick(); }}
+                      onMouseEnter={playHover}
+                      className="touch-target p-2 border-2 border-pastel-charcoal hover:bg-pastel-blue transition-colors bg-pastel-surface shadow-pixel-sm active:translate-y-1 text-pastel-charcoal focus:outline-none focus:ring-2 focus:ring-pastel-charcoal focus:ring-offset-2"
+                    >
+                      <ArrowRight size={20} />
+                    </button>
+                  </div>
+                )}
               </div>
-              
-              {testimonials.length > 1 && (
-                <>
-                  <button 
-                    onClick={prevTestimonial}
-                    className="absolute top-1/2 -left-4 sm:-left-6 transform -translate-y-1/2 bg-pastel-blue hover:bg-pastel-pink text-pastel-charcoal border-2 border-pastel-charcoal p-2 sm:p-3 shadow-pixel transition-colors z-20"
-                    aria-label="Previous testimonial"
-                    onMouseEnter={playHover}
-                  >
-                    <ArrowLeft size={20} className="sm:w-6 sm:h-6" />
-                  </button>
-                  <button 
-                    onClick={nextTestimonial}
-                    className="absolute top-1/2 -right-4 sm:-right-6 transform -translate-y-1/2 bg-pastel-blue hover:bg-pastel-pink text-pastel-charcoal border-2 border-pastel-charcoal p-2 sm:p-3 shadow-pixel transition-colors z-20"
-                    aria-label="Next testimonial"
-                    onMouseEnter={playHover}
-                  >
-                    <ArrowRight size={20} className="sm:w-6 sm:h-6" />
-                  </button>
-                </>
-              )}
-            </div>
-          ) : (
-            <div className="bg-pastel-cream border-2 border-pastel-charcoal p-8 text-center shadow-pixel transition-colors duration-500 text-pastel-charcoal">
-              <p>No testimonials available yet.</p>
-            </div>
-          )}
+            ) : (
+              <div className="text-center font-pixel text-xl">Testimonials coming soon!</div>
+            )}
+          </div>
         </div>
-      </div>
-    </Section>
+      </Section>
+    </>
   );
 };
 

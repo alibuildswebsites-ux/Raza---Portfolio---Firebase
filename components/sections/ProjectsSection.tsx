@@ -95,108 +95,144 @@ const ProjectsSection = () => {
   }, [filteredProjects]);
 
   return (
-    <Section id="projects" className="bg-pastel-surface border-t-4 border-pastel-charcoal transition-colors duration-500">
-      <div ref={projectsRef} className="max-w-7xl mx-auto relative z-10 px-4 md:px-8">
-        <div className="projects-heading flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 sm:mb-16 pt-8 sm:pt-0">
-          <div className="w-full">
-            <h2 className="font-pixel text-3xl sm:text-4xl mb-2 sm:mb-4">My Projects</h2>
-            <p className="text-base sm:text-lg max-w-2xl mx-auto">Selected works demonstrating value and functionality.</p>
-          </div>
-        </div>
-          
-        <div className="projects-filters flex flex-wrap gap-3 sm:gap-4 justify-center mb-12 sm:mb-16 sticky top-20 z-20 bg-pastel-surface/90 backdrop-blur-sm p-4 border-2 border-pastel-charcoal shadow-pixel mx-auto w-[90%] md:w-fit transition-colors duration-500">
-          {categories.map((name) => (
-            <button 
-              key={name}
-              onClick={() => { 
-                onFilterChange(name);
-                playClick(); 
-              }}
-              onMouseEnter={playHover}
-              className={`
-                font-pixel text-lg px-4 py-2 border-2 border-pastel-charcoal transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-pastel-charcoal focus-visible:ring-offset-2
-                ${filter === name 
-                  ? 'bg-pastel-blue shadow-none translate-y-1 text-black' 
-                  : 'bg-pastel-surface hover:bg-pastel-gray shadow-pixel hover:-translate-y-1 active:shadow-none active:translate-y-0 text-pastel-charcoal'
-                }
-              `}
-            >
-              {name}
-            </button>
-          ))}
-        </div>
+    <>
 
-        <div className="projects-grid" ref={projectsGridRef}>
-          {isLoading ? (
-            <div className="flex flex-col items-center justify-center py-20">
-              <div className="h-16 w-16 bg-pastel-blue animate-pulse mb-6 border-2 border-pastel-charcoal shadow-pixel-sm"></div>
-              <div className="font-pixel text-lg animate-pulse text-pastel-charcoal">Loading Projects...</div>
+      {/* --- PROJECTS --- */}
+      <Section id="projects" className="bg-pastel-surface border-t-4 border-pastel-charcoal transition-colors duration-500">
+        <div 
+           ref={projectsRef as React.RefObject<HTMLDivElement>}
+           className="max-w-7xl mx-auto relative z-10 px-4 md:px-8"
+        >
+          {/* 1. Header Text */}
+          <div 
+            className="projects-heading flex flex-col justify-center items-center mb-8 gap-6 text-center"
+          >
+            <div className="w-full">
+              <h2 className="font-pixel text-3xl sm:text-4xl mb-2 sm:mb-4">My Projects</h2>
+              <p className="text-base sm:text-lg max-w-2xl mx-auto">Selected works demonstrating value and functionality.</p>
+            </div>
+          </div>
+            
+          {/* 2. Filter Buttons */}
+          <div 
+            className="projects-filters flex flex-wrap justify-center gap-3 w-full mb-12"
+          >
+            {categories.map((name) => (
+              <button 
+                key={name}
+                onClick={() => { 
+                  onFilterChange(name);
+                  playClick(); 
+                }}
+                onMouseEnter={playHover}
+                className={`
+                  font-pixel text-lg px-4 py-2 border-2 border-pastel-charcoal transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-pastel-charcoal focus-visible:ring-offset-2
+                  ${filter === name 
+                    ? 'bg-pastel-blue shadow-none translate-y-1 text-black' 
+                    : 'bg-pastel-surface hover:bg-pastel-gray shadow-pixel hover:-translate-y-1 active:shadow-none active:translate-y-0 text-pastel-charcoal'
+                  }
+                `}
+              >
+                {name}
+              </button>
+            ))}
+          </div>
+
+          {/* 3. Project Grid */}
+          {!isLoading ? (
+            <div 
+                ref={projectsGridRef}
+                className="projects-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12 min-h-[200px]"
+            >
+                  {filteredProjects.map((project) => (
+                    <div key={project.id} className="project-card-wrapper h-full">
+                      <div
+                        className="project-card group bg-pastel-surface border-2 border-pastel-charcoal shadow-pixel flex flex-col h-full hover:shadow-pixel-lg transition-all duration-300 relative hover:-translate-y-1 hover:z-10"
+                        onMouseEnter={playHover}
+                      >
+                       {/* --- FLOATING ICON BADGE --- */}
+                       <div className="absolute -top-4 -right-4 w-12 h-12 bg-pastel-blue border-2 border-pastel-charcoal flex items-center justify-center shadow-pixel z-20 transform rotate-0 group-hover:rotate-[9deg] transition-transform duration-300">
+                          <Code size={24} className="text-black" />
+                       </div>
+
+                      {/* Content Body */}
+                      <div className="p-6 md:p-8 flex flex-col flex-1 h-full">
+                        <div className="mb-6">
+                          <div className="inline-block bg-pastel-lavender border-2 border-pastel-charcoal px-3 py-1 shadow-sm">
+                             <span className="font-pixel text-xs font-bold tracking-widest uppercase text-black">
+                                {project.category}
+                             </span>
+                          </div>
+                        </div>
+
+                        <div className="flex justify-between items-start mb-4">
+                          <h3 className="font-pixel text-3xl leading-none group-hover:text-pastel-blue transition-colors text-pastel-charcoal">
+                            {project.title}
+                          </h3>
+                        </div>
+
+                        <p className="text-gray-600 mb-8 font-sans text-sm leading-relaxed flex-grow break-words line-clamp-4">
+                          {project.description}
+                        </p>
+
+                        <div className="flex flex-wrap gap-2 mb-8">
+                          {project.technologies.slice(0, 4).map(t => (
+                            <span key={t} className="border-2 border-gray-200 bg-gray-50 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-gray-600">
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+
+                        <div className="mt-auto flex gap-3 h-12">
+                          <a 
+                            href={project.demoUrl} 
+                            target="_blank" 
+                            rel="noreferrer noopener"
+                            onClick={playClick} 
+                            onMouseEnter={playHover}
+                            className="flex-1 bg-pastel-charcoal text-pastel-cream font-pixel text-lg border-2 border-pastel-charcoal hover:bg-pastel-blue hover:text-black hover:border-pastel-charcoal transition-all flex items-center justify-center gap-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-pastel-charcoal focus:ring-offset-2"
+                          >
+                            <ExternalLink size={18} /> Live Demo
+                          </a>
+                          
+                          {project.githubUrl && (
+                            <a 
+                              href={project.githubUrl} 
+                              target="_blank" 
+                              rel="noreferrer noopener" 
+                              onClick={playClick} 
+                              onMouseEnter={playHover}
+                              className="w-14 border-2 border-pastel-charcoal flex items-center justify-center hover:bg-gray-100 transition-colors bg-pastel-surface text-pastel-charcoal focus:outline-none focus:ring-2 focus:ring-pastel-charcoal focus:ring-offset-2" 
+                              title="View Code"
+                            >
+                              <Github size={20} />
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                  ))}
+                
+                {filteredProjects.length === 0 && (
+                   <div 
+                     className="w-full col-span-1 md:col-span-2 lg:col-span-3 flex flex-col items-center justify-center py-20 opacity-50 bg-gray-50 border-2 border-dashed border-gray-300"
+                   >
+                      <div className="w-16 h-16 bg-gray-200 border-2 border-gray-400 mb-4 flex items-center justify-center">
+                        <Code className="text-gray-400" />
+                      </div>
+                      <p className="font-pixel text-xl text-black">Projects coming soon.</p>
+                   </div>
+                )}
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 min-h-[500px] content-start">
-              {filteredProjects.map((project) => (
-                <div key={project.id} className="project-card-wrapper">
-                  <div className="project-card h-full bg-pastel-cream border-2 border-pastel-charcoal shadow-pixel group hover:-translate-y-2 hover:shadow-pixel-lg transition-all duration-300 flex flex-col">
-                    <div className="h-48 sm:h-56 bg-pastel-gray/30 border-b-2 border-pastel-charcoal relative overflow-hidden flex items-center justify-center">
-                      <div className="absolute inset-0 bg-pastel-blue/10 group-hover:bg-pastel-blue/20 transition-colors duration-300"></div>
-                      <Code size={48} className="text-pastel-charcoal opacity-20 group-hover:opacity-40 transition-opacity duration-300 group-hover:scale-110 transform" />
-                      {project.category && (
-                        <span className="absolute top-4 right-4 bg-pastel-cream border-2 border-pastel-charcoal px-3 py-1 font-pixel text-xs shadow-pixel-sm text-pastel-charcoal">
-                          {project.category}
-                        </span>
-                      )}
-                    </div>
-                    
-                    <div className="p-6 flex flex-col flex-grow">
-                      <h3 className="font-pixel text-xl sm:text-2xl mb-3 text-pastel-charcoal">{project.title}</h3>
-                      <p className="text-sm sm:text-base mb-6 flex-grow">{project.description}</p>
-                      
-                      <div className="flex flex-wrap gap-2 mb-6">
-                        {project.technologies.slice(0, 4).map((tech, idx) => (
-                          <span key={idx} className="bg-pastel-blue/20 text-pastel-charcoal border border-pastel-charcoal/30 px-2 py-1 text-xs font-bold transition-colors duration-500">
-                            {tech}
-                          </span>
-                        ))}
-                        {project.technologies.length > 4 && (
-                          <span className="bg-pastel-gray/20 text-pastel-charcoal border border-pastel-charcoal/30 px-2 py-1 text-xs font-bold transition-colors duration-500">
-                            +{project.technologies.length - 4}
-                          </span>
-                        )}
-                      </div>
-                      
-                      <div className="flex gap-4 mt-auto pt-4 border-t-2 border-pastel-charcoal/10 transition-colors duration-500">
-                        {project.demoUrl && (
-                          <a 
-                            href={project.demoUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex-1 bg-pastel-blue hover:bg-pastel-pink text-pastel-charcoal border-2 border-pastel-charcoal py-2 px-4 flex items-center justify-center gap-2 font-bold shadow-pixel-sm hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all"
-                            onMouseEnter={playHover}
-                          >
-                            Live Demo <ExternalLink size={16} />
-                          </a>
-                        )}
-                        {project.githubUrl && (
-                          <a 
-                            href={project.githubUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex-1 bg-white hover:bg-pastel-gray text-pastel-charcoal border-2 border-pastel-charcoal py-2 px-4 flex items-center justify-center gap-2 font-bold shadow-pixel-sm hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all"
-                            onMouseEnter={playHover}
-                          >
-                            Code <Github size={16} />
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+            <div className="h-[200px] flex items-center justify-center">
+              <span className="font-pixel text-xl animate-pulse text-pastel-charcoal">Loading projects...</span>
             </div>
           )}
         </div>
-      </div>
-    </Section>
+      </Section>
+    </>
   );
 };
 
