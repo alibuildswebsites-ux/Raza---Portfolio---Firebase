@@ -16,7 +16,6 @@ import Home from './pages/Home';
 
 // AUTH CHUNK
 const Login = lazy(() => import('./pages/Login'));
-const NotFound = lazy(() => import('./pages/NotFound'));
 
 // ADMIN CHUNK
 const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'));
@@ -213,7 +212,7 @@ const App: React.FC = () => {
                 />
               </Route>
 
-              <Route path="*" element={<Suspense fallback={<LoginSkeleton />}><NotFound /></Suspense>} />
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </BrowserRouter>
         </AudioProvider>
