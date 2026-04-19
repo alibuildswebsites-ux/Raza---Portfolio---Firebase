@@ -1,5 +1,4 @@
-
-import { createContext, useContext, useState, useRef, useEffect, PropsWithChildren } from 'react';
+import { createContext, useContext, useState, useRef, useEffect, useMemo, useCallback, PropsWithChildren } from 'react';
 
 interface AudioContextType {
   muted: boolean;
@@ -16,29 +15,26 @@ export const AudioProvider = ({ children }: PropsWithChildren) => {
     return localStorage.getItem('sound_muted') === 'true';
   });
 
-  // Keep a reference to the AudioContext (it's heavy, so one instance is best)
   const audioCtxRef = useRef<AudioContext | null>(null);
 
   useEffect(() => {
     localStorage.setItem('sound_muted', String(muted));
   }, [muted]);
 
-  const initAudio = () => {
+  const initAudio = useCallback(() => {
     if (!audioCtxRef.current) {
-      // Cross-browser support
       const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
       if (AudioContextClass) {
         audioCtxRef.current = new AudioContextClass();
       }
     }
-    // Resume if suspended (browser policy)
     if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
       audioCtxRef.current.resume();
     }
     return audioCtxRef.current;
-  };
+  }, []);
 
-  const playOscillator = (
+  const playOscillator = useCallback((
     type: OscillatorType,
     freqStart: number,
     freqEnd: number,
@@ -66,26 +62,23 @@ export const AudioProvider = ({ children }: PropsWithChildren) => {
 
     osc.start();
     osc.stop(ctx.currentTime + duration);
-  };
+  }, [muted, initAudio]);
 
-  const playHover = () => {
-    // Short high-pitch 'bloop'
+  const playHover = useCallback(() => {
     playOscillator('sine', 800, 400, 0.05, 0.05);
-  };
+  }, [playOscillator]);
 
-  const playClick = () => {
-    // Mechanical 'clack' / square wave select
+  const playClick = useCallback(() => {
     playOscillator('square', 150, 100, 0.05, 0.05);
-  };
+  }, [playOscillator]);
 
-  const playThemeSwitch = () => {
-    // Magical arpeggio chime
+  const playThemeSwitch = useCallback(() => {
     if (muted) return;
     const ctx = initAudio();
     if (!ctx) return;
 
     const now = ctx.currentTime;
-    const notes = [523.25, 659.25, 783.99, 1046.50]; // C Major Arpeggio
+    const notes = [523.25, 659.25, 783.99, 1046.50]; 
     
     notes.forEach((freq, i) => {
       const osc = ctx.createOscillator();
@@ -104,14 +97,18 @@ export const AudioProvider = ({ children }: PropsWithChildren) => {
       osc.start(now + i * 0.1);
       osc.stop(now + i * 0.1 + 0.6);
     });
-  };
+  }, [muted, initAudio]);
 
-  const toggleMute = () => {
+  const toggleMute = useCallback(() => {
     setMuted(prev => !prev);
-  };
+  }, []);
+
+  const value = useMemo(() => ({
+    muted, toggleMute, playHover, playClick, playThemeSwitch
+  }), [muted, toggleMute, playHover, playClick, playThemeSwitch]);
 
   return (
-    <AudioContext.Provider value={{ muted, toggleMute, playHover, playClick, playThemeSwitch }}>
+    <AudioContext.Provider value={value}>
       {children}
     </AudioContext.Provider>
   );

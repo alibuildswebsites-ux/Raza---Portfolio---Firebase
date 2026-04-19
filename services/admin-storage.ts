@@ -56,7 +56,7 @@ export const getMessages = async (): Promise<ContactSubmission[]> => {
   const ref = collection(getDB(), 'messages');
   const q = query(ref, orderBy('submittedAt', 'desc'));
   const snapshot = await getDocs(q);
-  return snapshot.docs.map(doc => {
+  return snapshot.docs.map((doc: any) => {
     const data = doc.data();
     return {
       id: doc.id,
@@ -121,7 +121,7 @@ export const logoutUser = async () => {
 
 export const checkSession = async (): Promise<boolean> => {
   return new Promise((resolve) => {
-    const unsubscribe = onAuthStateChanged(getAuthInstance(), (user) => {
+    const unsubscribe = onAuthStateChanged(getAuthInstance(), (user: any) => {
       unsubscribe();
       resolve(!!user);
     });

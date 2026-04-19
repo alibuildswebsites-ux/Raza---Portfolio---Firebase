@@ -1,5 +1,4 @@
-
-import { createContext, useContext, useEffect, useState, PropsWithChildren } from 'react';
+import { createContext, useContext, useEffect, useState, useMemo, PropsWithChildren } from 'react';
 
 type Theme = 'day' | 'night';
 
@@ -26,12 +25,13 @@ export const ThemeProvider = ({ children }: PropsWithChildren) => {
     localStorage.setItem('theme', theme);
   }, [theme]);
 
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'day' ? 'night' : 'day');
-  };
+  const value = useMemo(() => ({
+    theme,
+    toggleTheme: () => setTheme(prev => prev === 'day' ? 'night' : 'day')
+  }), [theme]);
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={value}>
       {children}
     </ThemeContext.Provider>
   );

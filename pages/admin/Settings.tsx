@@ -16,7 +16,7 @@ const Settings: React.FC = () => {
     const auth = getAuth(getFirebaseApp());
     if (!auth) return;
     
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user: any) => {
       if (user && user.email) {
         setCurrentUserEmail(user.email);
       }

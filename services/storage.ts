@@ -15,7 +15,7 @@ export const getProjects = async (): Promise<Project[]> => {
   const q = query(projectsRef, where('isVisible', '==', true));
   const querySnapshot = await getDocs(q);
   
-  const projects = querySnapshot.docs.map(doc => {
+  const projects = querySnapshot.docs.map((doc: any) => {
     const data = doc.data();
     return {
       id: doc.id,
@@ -30,7 +30,7 @@ export const getProjects = async (): Promise<Project[]> => {
     } as Project;
   });
 
-  return projects.sort((a, b) => {
+  return projects.sort((a: any, b: any) => {
     const timeA = a.updatedAt || '';
     const timeB = b.updatedAt || '';
     return timeB.localeCompare(timeA);
@@ -44,7 +44,7 @@ export const getTestimonials = async (): Promise<Testimonial[]> => {
   const q = query(ref, where('isVisible', '==', true));
   const snapshot = await getDocs(q);
 
-  const testimonials = snapshot.docs.map(doc => {
+  const testimonials = snapshot.docs.map((doc: any) => {
     const data = doc.data();
     return {
       id: doc.id,
@@ -59,7 +59,7 @@ export const getTestimonials = async (): Promise<Testimonial[]> => {
     } as Testimonial;
   });
 
-  return testimonials.sort((a, b) => {
+  return testimonials.sort((a: any, b: any) => {
     if (a.isFeatured !== b.isFeatured) return a.isFeatured ? -1 : 1;
     const timeA = a.updatedAt || a.id;
     const timeB = b.updatedAt || b.id;

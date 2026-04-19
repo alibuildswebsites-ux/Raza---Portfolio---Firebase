@@ -1,5 +1,5 @@
 
-import { initializeApp, FirebaseApp } from 'firebase/app';
+import { initializeApp } from 'firebase/app';
 
 // Safely access environment variables using optional chaining
 const firebaseConfig = {
@@ -12,7 +12,7 @@ const firebaseConfig = {
   measurementId: import.meta.env?.VITE_FIREBASE_MEASUREMENT_ID
 };
 
-let app: FirebaseApp | undefined;
+let app: any = undefined;
 
 export const getFirebaseApp = () => {
   if (!app) {
