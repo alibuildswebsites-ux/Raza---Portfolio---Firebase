@@ -72,9 +72,9 @@ export const PixelMoon = memo(({ className = "" }: { className?: string }) => (
 ));
 
 export const PixelStars = memo(() => {
-  const stars = useMemo(() => Array.from({ length: 20 }).map((_, i) => ({
+  const stars = useMemo(() => Array.from({ length: 30 }).map((_, i) => ({
     id: i,
-    top: `${Math.random() * 60}%`,
+    top: `${Math.random() * 50}vh`,
     left: `${Math.random() * 100}%`,
     size: Math.random() > 0.5 ? 4 : 2,
     delay: Math.random() * 2

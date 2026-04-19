@@ -30,12 +30,14 @@ const HeroSection: React.FC<HeroSectionProps> = ({ startTypewriter = true }) => 
         
         {/* === LAYER 0: DECORATIONS & BACKGROUND === */}
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-          <ParticleBackground />
+          {theme === 'day' && <ParticleBackground />}
           {theme === 'night' && <PixelStars />}
           
-          <div 
-             className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-white opacity-40 rounded-full blur-3xl animate-[pulse_4s_ease-in-out_infinite]" 
-          />
+          {theme === 'day' && (
+            <div 
+               className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-white opacity-40 rounded-full blur-3xl animate-[pulse_4s_ease-in-out_infinite]" 
+            />
+          )}
 
           <div className="absolute top-24 right-4 md:right-8 lg:right-12 z-10">
                {theme === 'day' ? (
