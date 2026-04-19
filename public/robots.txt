@@ -1,7 +1,6 @@
-
 User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /dashboard
 
-Sitemap: https://raza-portfolio.com/sitemap.xml
+Sitemap: https://alibuildswebsites.me/sitemap.xml

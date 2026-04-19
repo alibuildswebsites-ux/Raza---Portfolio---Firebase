@@ -1,0 +1,21 @@
+{
+  "name": "Raza A. | Web Developer",
+  "short_name": "Raza A.",
+  "description": "Elevate your brand with Raza A., a freelance Web Developer & UI Designer.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FDFBF7",
+  "theme_color": "#FDFBF7",
+  "icons": [
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
