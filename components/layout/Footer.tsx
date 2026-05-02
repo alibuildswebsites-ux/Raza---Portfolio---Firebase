@@ -88,29 +88,23 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t-2 border-white/10 pt-8 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+        <div className="border-t-2 border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
           {/* Copyright */}
-          <div className="text-center md:text-left order-2 md:order-1">
+          <div className="text-center md:text-left">
             <p className="font-pixel text-base text-gray-400 opacity-60 tracking-wide">© 2026 Raza A. All rights reserved.</p>
           </div>
-          
-          {/* Made With Badge (Centered) */}
-          <div className="flex justify-center order-1 md:order-2">
-             <div className="flex flex-wrap justify-center items-center gap-2 text-xs md:text-sm text-gray-400 bg-black/20 px-4 py-2 rounded-full border border-white/5 text-center">
-                <span>Made with</span>
-                <svg width="16" height="14" viewBox="0 0 8 7" className="animate-pulse" shapeRendering="crispEdges">
-                  {/* Left Half (Light Pink) */}
-                  <path d="M1 0h2v1H1z M0 1h4v3H0z M1 4h3v1H1z M2 5h2v1H2z M3 6h1v1H3z" fill="#FF9EAA" />
-                  
-                  {/* Right Half (Dark Pink) */}
-                  <path d="M5 0h2v1H5z M4 1h4v3H4z M4 4h3v1H4z M4 5h2v1H4z M4 6h1v1H4z" fill="#FF2A6D" />
-                </svg>
-                <span>using React & Tailwind</span>
-             </div>
+
+          {/* Agency Credit */}
+          <div className="text-center md:text-right">
+            <a
+              href="https://corvix-pi.vercel.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-pixel text-base text-gray-400 opacity-60 tracking-wide hover:opacity-100 hover:text-pastel-blue transition-all duration-300"
+            >
+              Powered by Corvix
+            </a>
           </div>
-          
-          {/* Empty spacer to balance grid */}
-          <div className="hidden md:block order-3"></div>
         </div>
       </div>
     </footer>
