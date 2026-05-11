@@ -1,10 +1,36 @@
-
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Helper function to check if user is admin
+    // Admins must be explicitly marked with a Firebase Auth custom claim.
     function isAdmin() {
-      return request.auth != null;
+      return request.auth != null && request.auth.token.admin == true;
+    }
+
+    function validOptionalString(field, maxLength) {
+      return !(field in request.resource.data)
+        || request.resource.data[field] == null
+        || (request.resource.data[field] is string && request.resource.data[field].size() <= maxLength);
+    }
+
+    function validMessageCreate() {
+      return request.resource.data.keys().hasOnly([
+          'name', 'email', 'phone', 'message', 'status', 'submittedAt'
+        ])
+        && request.resource.data.keys().hasAll(['name', 'email', 'message', 'status', 'submittedAt'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.name.size() <= 120
+        && request.resource.data.email is string
+        && request.resource.data.email.size() > 3
+        && request.resource.data.email.size() <= 254
+        && request.resource.data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
+        && validOptionalString('phone', 40)
+        && request.resource.data.message is string
+        && request.resource.data.message.size() > 0
+        && request.resource.data.message.size() <= 4000
+        && request.resource.data.status == 'unread'
+        && request.resource.data.submittedAt is string
+        && request.resource.data.submittedAt.size() <= 40;
     }
 
     // Projects: Public read only visible, Admin read/write all
@@ -19,9 +45,9 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // Messages: Public create, Admin read/write
+    // Messages: Validated public create, Admin read/write
     match /messages/{messageId} {
-      allow create: if true; // Public can write
+      allow create: if validMessageCreate();
       allow read, update, delete: if isAdmin();
     }
   }

@@ -31,34 +31,37 @@ const ContactForm = () => {
     const TEMPLATE_ID = import.meta.env?.VITE_EMAILJS_TEMPLATE_ID;
     const PUBLIC_KEY = import.meta.env?.VITE_EMAILJS_PUBLIC_KEY;
 
-    // Validate config presence
-    if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
-      console.error("EmailJS Configuration Error: Missing environment variables. Please check your .env file.");
-      setFormStatus('error');
-      setErrorMessage("Configuration error. Please contact admin.");
-      // Reset after 5s so user can try again if they fix it (dev mode)
-      setTimeout(() => {
-        setFormStatus('idle');
-        setErrorMessage('');
-      }, 5000);
-      return;
-    }
+    const messagePayload = {
+      name: contactForm.name.trim(),
+      email: contactForm.email.trim(),
+      phone: contactForm.phone.trim(),
+      message: contactForm.message.trim()
+    };
 
     const templateParams = {
-      from_name: contactForm.name,
-      from_email: contactForm.email,
-      phone: contactForm.phone,
-      message: contactForm.message,
+      from_name: messagePayload.name,
+      from_email: messagePayload.email,
+      phone: messagePayload.phone,
+      message: messagePayload.message,
       to_name: "Raza A." 
     };
 
     try {
-      // Dynamic Import for EmailJS and Storage
-      const emailjs = (await import('@emailjs/browser')).default;
+      // Persist the lead first so inbox records are not lost if email delivery fails.
       const db = await import('../../services/storage');
-      
-      await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY);
-      await db.saveMessage(contactForm);
+      await db.saveMessage(messagePayload);
+
+      // Send the notification after the message is safely stored.
+      if (SERVICE_ID && TEMPLATE_ID && PUBLIC_KEY) {
+        try {
+          const emailjs = (await import('@emailjs/browser')).default;
+          await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY);
+        } catch (emailError) {
+          console.warn('Message saved, but EmailJS notification failed:', emailError);
+        }
+      } else {
+        console.warn('Message saved, but EmailJS notification was skipped because configuration is missing.');
+      }
       
       // Update Rate Limit Key
       localStorage.setItem(LAST_SUBMISSION_KEY, Date.now().toString());
@@ -70,7 +73,7 @@ const ContactForm = () => {
         setErrorMessage('');
       }, 5000);
     } catch (err) {
-      console.error('EmailJS Error:', err);
+      console.error('Contact form submission error:', err);
       setFormStatus('error');
       setErrorMessage("Something went wrong. Please try again.");
       setTimeout(() => {

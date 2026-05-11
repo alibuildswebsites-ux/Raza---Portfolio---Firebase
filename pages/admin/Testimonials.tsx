@@ -2,8 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import PixelButton from '../../components/ui/PixelButton';
 import { Plus, Trash2, Edit2, EyeOff, RefreshCw } from 'lucide-react';
-import { getTestimonials } from '../../services/storage';
-import { saveTestimonial, deleteTestimonial } from '../../services/admin-storage';
+import { saveTestimonial, deleteTestimonial, getAllTestimonials } from '../../services/admin-storage';
 import { Testimonial } from '../../types';
 
 const Testimonials: React.FC = () => {
@@ -13,7 +12,7 @@ const Testimonials: React.FC = () => {
   const [showDeleteModal, setShowDeleteModal] = useState<string | null>(null);
 
   const load = async () => {
-    const data = await getTestimonials();
+    const data = await getAllTestimonials();
     setItems(data);
   };
 

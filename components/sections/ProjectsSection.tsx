@@ -99,12 +99,12 @@ const ProjectsSection = () => {
 
       {/* --- PROJECTS --- */}
       <Section id="projects" className="bg-pastel-surface border-t-4 border-pastel-charcoal transition-colors duration-500">
-        <div 
+        <div
            ref={projectsRef as React.RefObject<HTMLDivElement>}
            className="max-w-7xl mx-auto relative z-10 px-4 md:px-8"
         >
           {/* 1. Header Text */}
-          <div 
+          <div
             className="projects-heading flex flex-col justify-center items-center mb-8 gap-6 text-center"
           >
             <div className="w-full">
@@ -112,23 +112,23 @@ const ProjectsSection = () => {
               <p className="text-base sm:text-lg max-w-2xl mx-auto">Selected works demonstrating value and functionality.</p>
             </div>
           </div>
-            
+
           {/* 2. Filter Buttons */}
-          <div 
+          <div
             className="projects-filters flex flex-wrap justify-center gap-3 w-full mb-12"
           >
             {categories.map((name) => (
-              <button 
+              <button
                 key={name}
-                onClick={() => { 
+                onClick={() => {
                   onFilterChange(name);
-                  playClick(); 
+                  playClick();
                 }}
                 onMouseEnter={playHover}
                 className={`
                   font-pixel text-lg px-4 py-2 border-2 border-pastel-charcoal transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-pastel-charcoal focus-visible:ring-offset-2
-                  ${filter === name 
-                    ? 'bg-pastel-blue shadow-none translate-y-1 text-black' 
+                  ${filter === name
+                    ? 'bg-pastel-blue shadow-none translate-y-1 text-black'
                     : 'bg-pastel-surface hover:bg-pastel-gray shadow-pixel hover:-translate-y-1 active:shadow-none active:translate-y-0 text-pastel-charcoal'
                   }
                 `}
@@ -140,7 +140,7 @@ const ProjectsSection = () => {
 
           {/* 3. Project Grid */}
           {!isLoading ? (
-            <div 
+            <div
                 ref={projectsGridRef}
                 className="projects-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12 min-h-[200px]"
             >
@@ -184,25 +184,27 @@ const ProjectsSection = () => {
                         </div>
 
                         <div className="mt-auto flex gap-3 h-12">
-                          <a 
-                            href={project.demoUrl} 
-                            target="_blank" 
-                            rel="noreferrer noopener"
-                            onClick={playClick} 
-                            onMouseEnter={playHover}
-                            className="flex-1 bg-pastel-charcoal text-pastel-cream font-pixel text-lg border-2 border-pastel-charcoal hover:bg-pastel-blue hover:text-black hover:border-pastel-charcoal transition-all flex items-center justify-center gap-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-pastel-charcoal focus:ring-offset-2"
-                          >
-                            <ExternalLink size={18} /> Live Demo
-                          </a>
-                          
-                          {project.githubUrl && (
-                            <a 
-                              href={project.githubUrl} 
-                              target="_blank" 
-                              rel="noreferrer noopener" 
-                              onClick={playClick} 
+                          {project.demoUrl && (
+                            <a
+                              href={project.demoUrl}
+                              target="_blank"
+                              rel="noreferrer noopener"
+                              onClick={playClick}
                               onMouseEnter={playHover}
-                              className="w-14 border-2 border-pastel-charcoal flex items-center justify-center hover:bg-gray-100 transition-colors bg-pastel-surface text-pastel-charcoal focus:outline-none focus:ring-2 focus:ring-pastel-charcoal focus:ring-offset-2" 
+                              className="flex-1 bg-pastel-charcoal text-pastel-cream font-pixel text-lg border-2 border-pastel-charcoal hover:bg-pastel-blue hover:text-black hover:border-pastel-charcoal transition-all flex items-center justify-center gap-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-pastel-charcoal focus:ring-offset-2"
+                            >
+                              <ExternalLink size={18} /> Live Demo
+                            </a>
+                          )}
+
+                          {project.githubUrl && (
+                            <a
+                              href={project.githubUrl}
+                              target="_blank"
+                              rel="noreferrer noopener"
+                              onClick={playClick}
+                              onMouseEnter={playHover}
+                              className="w-14 border-2 border-pastel-charcoal flex items-center justify-center hover:bg-gray-100 transition-colors bg-pastel-surface text-pastel-charcoal focus:outline-none focus:ring-2 focus:ring-pastel-charcoal focus:ring-offset-2"
                               title="View Code"
                             >
                               <Github size={20} />
@@ -213,9 +215,9 @@ const ProjectsSection = () => {
                     </div>
                     </div>
                   ))}
-                
+
                 {filteredProjects.length === 0 && (
-                   <div 
+                   <div
                      className="w-full col-span-1 md:col-span-2 lg:col-span-3 flex flex-col items-center justify-center py-20 opacity-50 bg-gray-50 border-2 border-dashed border-gray-300"
                    >
                       <div className="w-16 h-16 bg-gray-200 border-2 border-gray-400 mb-4 flex items-center justify-center">

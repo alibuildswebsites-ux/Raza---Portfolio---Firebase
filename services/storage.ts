@@ -4,6 +4,7 @@ import {
   collection, getDocs, addDoc, getFirestore, query, where
 } from 'firebase/firestore';
 import { Project, Testimonial, ContactSubmission } from '../types';
+import { getSafeOptionalUrl } from '../utils/urls';
 
 // Helper to access lazy instances
 const getDB = () => getFirestore(getFirebaseApp());
@@ -22,8 +23,8 @@ export const getProjects = async (): Promise<Project[]> => {
       title: data.title,
       description: data.description,
       technologies: data.technologies || [],
-      demoUrl: data.demoUrl,
-      githubUrl: data.githubUrl,
+      demoUrl: getSafeOptionalUrl(data.demoUrl),
+      githubUrl: getSafeOptionalUrl(data.githubUrl),
       category: data.category,
       isVisible: data.isVisible,
       updatedAt: data.updatedAt
@@ -67,14 +68,29 @@ export const getTestimonials = async (): Promise<Testimonial[]> => {
   });
 };
 
+const CONTACT_LIMITS = {
+  name: 120,
+  email: 254,
+  phone: 40,
+  message: 4000
+} as const;
+
+const trimToLimit = (value: string | undefined, limit: number) => (value || '').trim().slice(0, limit);
+
 // --- MESSAGES (Public Write) ---
 export const saveMessage = async (msg: Omit<ContactSubmission, 'id' | 'status' | 'submittedAt'>): Promise<void> => {
-  await addDoc(collection(getDB(), 'messages'), {
-    name: msg.name,
-    email: msg.email,
-    phone: msg.phone,
-    message: msg.message,
+  const payload = {
+    name: trimToLimit(msg.name, CONTACT_LIMITS.name),
+    email: trimToLimit(msg.email, CONTACT_LIMITS.email),
+    phone: trimToLimit(msg.phone, CONTACT_LIMITS.phone),
+    message: trimToLimit(msg.message, CONTACT_LIMITS.message),
     status: 'unread',
     submittedAt: new Date().toISOString()
-  });
+  };
+
+  if (!payload.name || !payload.email || !payload.message) {
+    throw new Error('Name, email, and message are required.');
+  }
+
+  await addDoc(collection(getDB(), 'messages'), payload);
 };

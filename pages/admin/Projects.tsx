@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import PixelButton from '../../components/ui/PixelButton';
 import { Plus, Trash2, Edit2, ExternalLink } from 'lucide-react';
-import { getProjects } from '../../services/storage';
-import { saveProject, deleteProject } from '../../services/admin-storage';
+import { saveProject, deleteProject, getAllProjects } from '../../services/admin-storage';
+import { normalizeOptionalUrl } from '../../utils/urls';
 import { Project } from '../../types';
 
 // Define strict type for form handling
@@ -16,9 +16,10 @@ const Projects: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [currentProject, setCurrentProject] = useState<ProjectFormData>({});
   const [showDeleteModal, setShowDeleteModal] = useState<string | null>(null);
+  const [formError, setFormError] = useState('');
 
   const loadProjects = async () => {
-    const data = await getProjects();
+    const data = await getAllProjects();
     setProjects(data);
   };
 
@@ -28,11 +29,24 @@ const Projects: React.FC = () => {
     e.preventDefault();
     if (!currentProject.title || !currentProject.description) return;
 
+    setFormError('');
+
     let technologies: string[] = [];
     if (Array.isArray(currentProject.technologies)) {
       technologies = currentProject.technologies;
     } else if (typeof currentProject.technologies === 'string') {
       technologies = (currentProject.technologies as string).split(',').map(t => t.trim()).filter(Boolean);
+    }
+
+    let demoUrl = '';
+    let githubUrl = '';
+
+    try {
+      demoUrl = normalizeOptionalUrl(currentProject.demoUrl);
+      githubUrl = normalizeOptionalUrl(currentProject.githubUrl);
+    } catch (error) {
+      setFormError(error instanceof Error ? error.message : 'Please enter valid project URLs.');
+      return;
     }
 
     const newProject: Project = {
@@ -42,14 +56,15 @@ const Projects: React.FC = () => {
       technologies,
       isVisible: currentProject.isVisible !== false,
       category: currentProject.category || 'Completed',
-      demoUrl: currentProject.demoUrl || '',
-      githubUrl: currentProject.githubUrl || ''
+      demoUrl,
+      githubUrl
     };
 
     try {
       await saveProject(newProject);
       setIsEditing(false);
       setCurrentProject({});
+      setFormError('');
       loadProjects();
     } catch (error) {
       console.error("Failed to save project", error);
@@ -79,7 +94,7 @@ const Projects: React.FC = () => {
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <h2 className="font-pixel text-2xl sm:text-3xl text-pastel-charcoal">Manage Projects</h2>
-        <PixelButton onClick={() => { setCurrentProject({ isVisible: true, category: 'Completed' }); setIsEditing(true); }} className="w-full sm:w-auto">
+        <PixelButton onClick={() => { setCurrentProject({ isVisible: true, category: 'Completed' }); setFormError(''); setIsEditing(true); }} className="w-full sm:w-auto">
           <Plus size={18} className="inline mr-2" /> Add Project
         </PixelButton>
       </div>
@@ -88,6 +103,11 @@ const Projects: React.FC = () => {
         <div className="bg-pastel-surface p-4 sm:p-8 border-2 border-pastel-charcoal shadow-pixel max-w-3xl mx-auto">
           <h3 className="font-pixel text-2xl mb-6 text-pastel-charcoal">{currentProject.id ? 'Edit Project' : 'New Project'}</h3>
           <form onSubmit={handleSave} className="space-y-4">
+            {formError && (
+              <div className="bg-red-100 border-2 border-red-300 text-red-700 p-3 text-sm" role="alert">
+                {formError}
+              </div>
+            )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                <div>
                   <label className="block font-bold mb-1 text-pastel-charcoal text-sm">Title</label>
@@ -194,7 +214,7 @@ const Projects: React.FC = () => {
                   </a>
                 )}
                 <button 
-                  onClick={() => { setCurrentProject(p); setIsEditing(true); }}
+                  onClick={() => { setCurrentProject(p); setFormError(''); setIsEditing(true); }}
                   className="p-2 text-blue-500 hover:bg-blue-500/10 rounded"
                   title="Edit"
                 >

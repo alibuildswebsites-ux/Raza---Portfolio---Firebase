@@ -1,25 +1,51 @@
-
 import { getFirebaseApp } from './firebaseConfig';
 import { 
   collection, doc, setDoc, deleteDoc, 
   query, orderBy, getCountFromServer, where, getFirestore, getDocs
 } from 'firebase/firestore';
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, getIdTokenResult } from 'firebase/auth';
 import { Project, Testimonial, ContactSubmission, AdminStats } from '../types';
+import { getSafeOptionalUrl, normalizeOptionalUrl } from '../utils/urls';
 
 // Helpers
 const getDB = () => getFirestore(getFirebaseApp());
 const getAuthInstance = () => getAuth(getFirebaseApp());
 
 // --- ADMIN PROJECTS ---
+export const getAllProjects = async (): Promise<Project[]> => {
+  const projectsRef = collection(getDB(), 'projects');
+  const snapshot = await getDocs(projectsRef);
+
+  const projects = snapshot.docs.map((doc: any) => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      title: data.title,
+      description: data.description,
+      technologies: data.technologies || [],
+      demoUrl: getSafeOptionalUrl(data.demoUrl),
+      githubUrl: getSafeOptionalUrl(data.githubUrl),
+      category: data.category,
+      isVisible: data.isVisible,
+      updatedAt: data.updatedAt
+    } as Project;
+  });
+
+  return projects.sort((a: Project, b: Project) => {
+    const timeA = a.updatedAt || a.id;
+    const timeB = b.updatedAt || b.id;
+    return String(timeB).localeCompare(String(timeA));
+  });
+};
+
 export const saveProject = async (project: Project): Promise<void> => {
   const projectRef = doc(getDB(), 'projects', project.id);
   const payload = {
     title: project.title,
     description: project.description,
     technologies: project.technologies,
-    demoUrl: project.demoUrl,
-    githubUrl: project.githubUrl,
+    demoUrl: normalizeOptionalUrl(project.demoUrl),
+    githubUrl: normalizeOptionalUrl(project.githubUrl),
     category: project.category,
     isVisible: project.isVisible,
     updatedAt: new Date().toISOString()
@@ -32,6 +58,33 @@ export const deleteProject = async (id: string): Promise<void> => {
 };
 
 // --- ADMIN TESTIMONIALS ---
+export const getAllTestimonials = async (): Promise<Testimonial[]> => {
+  const ref = collection(getDB(), 'testimonials');
+  const snapshot = await getDocs(ref);
+
+  const testimonials = snapshot.docs.map((doc: any) => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      clientName: data.clientName,
+      companyName: data.companyName,
+      text: data.text,
+      rating: data.rating,
+      isVisible: data.isVisible,
+      isFeatured: data.isFeatured,
+      updatedAt: data.updatedAt,
+      avatarSeed: data.avatarSeed
+    } as Testimonial;
+  });
+
+  return testimonials.sort((a: Testimonial, b: Testimonial) => {
+    if (a.isFeatured !== b.isFeatured) return a.isFeatured ? -1 : 1;
+    const timeA = a.updatedAt || a.id;
+    const timeB = b.updatedAt || b.id;
+    return String(timeB).localeCompare(String(timeA));
+  });
+};
+
 export const saveTestimonial = async (item: Testimonial): Promise<void> => {
   const testimonialRef = doc(getDB(), 'testimonials', item.id);
   const payload = {
@@ -105,9 +158,21 @@ export const getStats = async (): Promise<AdminStats> => {
 };
 
 // --- AUTH ---
+const userHasAdminClaim = async (user: NonNullable<ReturnType<typeof getAuthInstance>['currentUser']>): Promise<boolean> => {
+  const token = await getIdTokenResult(user, true);
+  return token.claims.admin === true;
+};
+
 export const loginUser = async (email: string, pass: string): Promise<boolean> => {
   try {
-    await signInWithEmailAndPassword(getAuthInstance(), email, pass);
+    const credential = await signInWithEmailAndPassword(getAuthInstance(), email, pass);
+    const isAdmin = await userHasAdminClaim(credential.user);
+
+    if (!isAdmin) {
+      await signOut(getAuthInstance());
+      return false;
+    }
+
     return true;
   } catch (error) {
     console.error("Login Error:", error);
@@ -121,9 +186,20 @@ export const logoutUser = async () => {
 
 export const checkSession = async (): Promise<boolean> => {
   return new Promise((resolve) => {
-    const unsubscribe = onAuthStateChanged(getAuthInstance(), (user: any) => {
+    const unsubscribe = onAuthStateChanged(getAuthInstance(), async (user: any) => {
       unsubscribe();
-      resolve(!!user);
+
+      if (!user) {
+        resolve(false);
+        return;
+      }
+
+      try {
+        resolve(await userHasAdminClaim(user));
+      } catch (error) {
+        console.error('Admin claim check failed:', error);
+        resolve(false);
+      }
     });
   });
 };
